@@ -1,0 +1,32 @@
+{
+	"name": "FreightRatesTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "FreightRatesPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bk2hjzw9p",
+					"targetTable": "staging.FreightRates",
+					"logTable": "etl.FreightRatesLoadInfo",
+					"syncStoredProc": "dbo.cp_syncFreightRates",
+					"updateLogStoredProc": "etl.cp_updateLogFreightRatesLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 12,
+				"startTime": "2019-04-02T12:11:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

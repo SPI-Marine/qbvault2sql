@@ -1,0 +1,126 @@
+{
+	"name": "MarketInfoSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.MarketInfo"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "DateModified",
+				"type": "DateTime"
+			},
+			{
+				"name": "ReportDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			},
+			{
+				"name": "RelatedLoadPort1ID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedDischPort1ID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedChartererID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedLoadPort2ID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedDischPort2ID",
+				"type": "String"
+			},
+			{
+				"name": "DischPort3RelatedID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedVesselID",
+				"type": "String"
+			},
+			{
+				"name": "Publishable_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "RelatedProductID",
+				"type": "String"
+			},
+			{
+				"name": "Commencement",
+				"type": "String"
+			},
+			{
+				"name": "Cancelling",
+				"type": "String"
+			},
+			{
+				"name": "RelatedCompetitorID",
+				"type": "String"
+			},
+			{
+				"name": "FreightRatePMTEntry",
+				"type": "Decimal"
+			},
+			{
+				"name": "ProductQuantity_ENTRY",
+				"type": "Decimal"
+			},
+			{
+				"name": "Unit",
+				"type": "String"
+			},
+			{
+				"name": "RelatedOwnerLinkID",
+				"type": "String"
+			},
+			{
+				"name": "Internal",
+				"type": "String"
+			},
+			{
+				"name": "BasisDataEntry",
+				"type": "String"
+			},
+			{
+				"name": "PandC",
+				"type": "String"
+			},
+			{
+				"name": "LastModifiedBy",
+				"type": "String"
+			},
+			{
+				"name": "Notes",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

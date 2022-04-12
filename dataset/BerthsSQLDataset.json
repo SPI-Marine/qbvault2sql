@@ -1,0 +1,70 @@
+{
+	"name": "BerthsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Berths"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "BerthName",
+				"type": "String"
+			},
+			{
+				"name": "RelatedPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "DraftRestriction",
+				"type": "Decimal"
+			},
+			{
+				"name": "LOARestriction",
+				"type": "Decimal"
+			},
+			{
+				"name": "ProductRestriction",
+				"type": "String"
+			},
+			{
+				"name": "ExNames",
+				"type": "String"
+			},
+			{
+				"name": "UniqueId",
+				"type": "String"
+			},
+			{
+				"name": "UpriverPorts",
+				"type": "String"
+			},
+			{
+				"name": "RelatedTerminalId",
+				"type": "Int32"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

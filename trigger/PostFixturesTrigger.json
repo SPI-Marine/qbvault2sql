@@ -1,0 +1,32 @@
+{
+	"name": "PostFixturesTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PostFixturesPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bmd6t28k5",
+					"targetTable": "staging.PostFixtures",
+					"logTable": "etl.PostFixturesLoadInfo",
+					"syncStoredProc": "dbo.cp_syncPostFixtures",
+					"updateLogStoredProc": "etl.cp_updateLogPostFixturesLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-04-02T12:15:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

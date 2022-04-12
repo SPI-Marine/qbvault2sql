@@ -1,0 +1,94 @@
+{
+	"name": "OwnerInvoiceSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.OwnerInvoice"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "DateModified",
+				"type": "DateTime"
+			},
+			{
+				"name": "InvoiceDueAmount",
+				"type": "Decimal"
+			},
+			{
+				"name": "OwnerInvoiceDate",
+				"type": "String"
+			},
+			{
+				"name": "OwnerInvoiceNumber",
+				"type": "String"
+			},
+			{
+				"name": "DateOwnersReceivedFrtPayment",
+				"type": "String"
+			},
+			{
+				"name": "OwnerInvoiceAttachment",
+				"type": "String"
+			},
+			{
+				"name": "DateInvoiceReceivedbySPI",
+				"type": "String"
+			},
+			{
+				"name": "DateValidatedbySPI",
+				"type": "String"
+			},
+			{
+				"name": "DateInvoiceSenttoCharterer",
+				"type": "String"
+			},
+			{
+				"name": "DateVerifiedbyCharterer",
+				"type": "String"
+			},
+			{
+				"name": "InternalInvoiceNotes",
+				"type": "String"
+			},
+			{
+				"name": "Currency",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceType",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPIFixtureID",
+				"type": "Int32"
+			},
+			{
+				"name": "InvoiceStatus_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "OwnersDueDate",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,62 @@
+{
+	"name": "TeamMembersSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.TeamMembers"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "FirstName",
+				"type": "String"
+			},
+			{
+				"name": "LastName",
+				"type": "String"
+			},
+			{
+				"name": "EmailAddress",
+				"type": "String"
+			},
+			{
+				"name": "RelatedDepartmentId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPIOfficeId",
+				"type": "Int32"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageManager",
+				"type": "String"
+			},
+			{
+				"name": "Hybrid",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,251 @@
+{
+	"name": "VesselsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "binf7kupm"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Name",
+				"type": "String"
+			},
+			{
+				"name": "Draft (M)",
+				"type": "String"
+			},
+			{
+				"name": "Year Built",
+				"type": "String"
+			},
+			{
+				"name": "Coils",
+				"type": "String"
+			},
+			{
+				"name": "Deadweight",
+				"type": "String"
+			},
+			{
+				"name": "Beam",
+				"type": "String"
+			},
+			{
+				"name": "LOA",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Parent ID",
+				"type": "String"
+			},
+			{
+				"name": "Yard",
+				"type": "String"
+			},
+			{
+				"name": "Ice Entry",
+				"type": "String"
+			},
+			{
+				"name": "Registered Owner",
+				"type": "String"
+			},
+			{
+				"name": "Clean or Dirty",
+				"type": "String"
+			},
+			{
+				"name": "TC Candidate",
+				"type": "String"
+			},
+			{
+				"name": "IMO  Type",
+				"type": "String"
+			},
+			{
+				"name": "Tanks",
+				"type": "String"
+			},
+			{
+				"name": "Pumps",
+				"type": "String"
+			},
+			{
+				"name": "Segs",
+				"type": "String"
+			},
+			{
+				"name": "CBM",
+				"type": "String"
+			},
+			{
+				"name": "Hull",
+				"type": "String"
+			},
+			{
+				"name": "Ex-Name",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Trade",
+				"type": "String"
+			},
+			{
+				"name": "Country of Build",
+				"type": "String"
+			},
+			{
+				"name": "Flag",
+				"type": "String"
+			},
+			{
+				"name": "Data Source",
+				"type": "String"
+			},
+			{
+				"name": "Commercial_Owner_Operator",
+				"type": "String"
+			},
+			{
+				"name": "Related Sale and Purchase ID",
+				"type": "String"
+			},
+			{
+				"name": "Archived Vsl",
+				"type": "String"
+			},
+			{
+				"name": "Reason for Archive",
+				"type": "String"
+			},
+			{
+				"name": "IGS Type",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "Related Ice Class ID",
+				"type": "String"
+			},
+			{
+				"name": "IMO Certificate Removed",
+				"type": "String"
+			},
+			{
+				"name": "KTR Number (Unique)",
+				"type": "String"
+			},
+			{
+				"name": "STST (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "Marine Line (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "Interline (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "Epoxy (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "Zinc (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "IMO 1 (CBM)_OLD",
+				"type": "String"
+			},
+			{
+				"name": "IMO 2 (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "IMO 3 (CBM)",
+				"type": "String"
+			},
+			{
+				"name": "YdNo",
+				"type": "String"
+			},
+			{
+				"name": "NB Contract Date_KTR",
+				"type": "String"
+			},
+			{
+				"name": "Retired Date",
+				"type": "String"
+			},
+			{
+				"name": "KTR Change Date",
+				"type": "String"
+			},
+			{
+				"name": "Delivery Date",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Type",
+				"type": "String"
+			},
+			{
+				"name": "Related Tank Coating ID",
+				"type": "String"
+			},
+			{
+				"name": "IMO Number",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.6.9.11.12.28.115.116.123.124.126.128.129.138.168.195.196.197.198.199.200.201.202.208.209.211.212.213.221.223.239.240.242.254.255.258.259.260.261.262.263.264.265.266.268.270.273.284.291.165.193</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

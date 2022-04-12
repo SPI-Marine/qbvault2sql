@@ -1,0 +1,66 @@
+{
+	"name": "ProductsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Products"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "ProductName",
+				"type": "String"
+			},
+			{
+				"name": "SpecificGravity",
+				"type": "Decimal"
+			},
+			{
+				"name": "RequiredCoating",
+				"type": "String"
+			},
+			{
+				"name": "EU",
+				"type": "String"
+			},
+			{
+				"name": "CIQ",
+				"type": "String"
+			},
+			{
+				"name": "NIOP",
+				"type": "String"
+			},
+			{
+				"name": "Notes",
+				"type": "String"
+			},
+			{
+				"name": "RelatedProductTypeId",
+				"type": "Int32"
+			},
+			{
+				"name": "LiquidType",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

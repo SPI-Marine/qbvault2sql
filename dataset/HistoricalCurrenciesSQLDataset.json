@@ -1,0 +1,50 @@
+{
+	"name": "HistoricalCurrenciesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.HistoricalCurrencies"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "CurrencyCode",
+				"type": "String"
+			},
+			{
+				"name": "CurrencyName",
+				"type": "String"
+			},
+			{
+				"name": "UnitsPerUSD",
+				"type": "Decimal"
+			},
+			{
+				"name": "USDPerUnit",
+				"type": "Decimal"
+			},
+			{
+				"name": "RateDate",
+				"type": "Date"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

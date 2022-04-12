@@ -1,0 +1,62 @@
+{
+	"name": "HSEQSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.HSEQ"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "IssueType",
+				"type": "String"
+			},
+			{
+				"name": "ApplyToAllParcels",
+				"type": "String"
+			},
+			{
+				"name": "IssueDate",
+				"type": "Date"
+			},
+			{
+				"name": "Comment",
+				"type": "String"
+			},
+			{
+				"name": "MajorIssue",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPIFixtureID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPI_COA_ID_PF",
+				"type": "Int32"
+			},
+			{
+				"name": "NumberOfTanksFailed",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

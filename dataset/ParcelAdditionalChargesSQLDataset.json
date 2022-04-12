@@ -1,0 +1,42 @@
+{
+	"name": "ParcelAdditionalChargesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.ParcelAdditionalCharges"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedParcelID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedAdditionalChargeID",
+				"type": "Int32"
+			},
+			{
+				"name": "ParcelAdditionalChargeAmountDue_QBC",
+				"type": "Decimal"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

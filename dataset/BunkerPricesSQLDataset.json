@@ -1,0 +1,54 @@
+{
+	"name": "BunkerPricesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.BunkerPrices"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QbRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "ReportDate",
+				"type": "String"
+			},
+			{
+				"name": "IFO180",
+				"type": "Decimal"
+			},
+			{
+				"name": "IFO380",
+				"type": "Decimal"
+			},
+			{
+				"name": "MGO",
+				"type": "Decimal"
+			},
+			{
+				"name": "DateModified",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

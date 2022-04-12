@@ -1,0 +1,79 @@
+{
+	"name": "ICEQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bmx7uskkg"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Date Created",
+				"type": "String"
+			},
+			{
+				"name": "Date Modified",
+				"type": "String"
+			},
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Classification Society",
+				"type": "String"
+			},
+			{
+				"name": "1SS (or Equivalent)",
+				"type": "String"
+			},
+			{
+				"name": "1C (or Equivalent)",
+				"type": "String"
+			},
+			{
+				"name": "1B (or Equivalent)",
+				"type": "String"
+			},
+			{
+				"name": "1A (or Equivalent)",
+				"type": "String"
+			},
+			{
+				"name": "1D (or Equivalent)",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>1.2.3.6.7.8.9.10.11</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

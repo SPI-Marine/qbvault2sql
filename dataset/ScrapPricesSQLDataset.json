@@ -1,0 +1,54 @@
+{
+	"name": "ScrapPricesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.ScrapPrices"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "AssessmentDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "ScrapLocation",
+				"type": "String"
+			},
+			{
+				"name": "USD_LDGAverage",
+				"type": "Decimal"
+			},
+			{
+				"name": "Comment",
+				"type": "String"
+			},
+			{
+				"name": "VesselType",
+				"type": "String"
+			},
+			{
+				"name": "LDTRange",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

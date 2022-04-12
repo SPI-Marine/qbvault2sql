@@ -1,0 +1,312 @@
+{
+	"name": "SOFEventsPipeLine_FullPull",
+	"properties": {
+		"description": "Does a complete historical load of SOF Events",
+		"activities": [
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "LoopThroughYears",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set Max Date",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Truncate Staging Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "maxDate",
+					"value": {
+						"value": "@formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "LoopThroughYears",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "Set Max Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@lessOrEquals(variables('maxDate'), variables('startTimeStamp'))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "ACTFetchDeltaData",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "HttpSource",
+									"httpRequestTimeout": "00:30:00"
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000,
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"Record ID#": "QBRecId",
+										"Laytime Applied": "Laytime",
+										"Pumping Time": "PumpingTime",
+										"Start Date": "StartDate",
+										"Stop Date": "StopDate",
+										"Stop Time": "StopTime",
+										"Comments": "Comments",
+										"Start Time": "StartTime",
+										"Laytime Proration Type": "LaytimeProationType",
+										"Related Port Time Event ID": "RelatedPortTimeEventId",
+										"LT Used Proration Amount hrs_QBC": "LtUsedProrationAmtHrs_QBC",
+										"Related Parcel Berth ID": "RelatedParcelBerthId",
+										"DateModified": "DateModified"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SOFEventsQBFullDataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"QBTableName": "@pipeline().parameters.sourceTable",
+										"StartDate_WhereClause": {
+											"value": "@variables('startTimeStamp')",
+											"type": "Expression"
+										},
+										"EndDate_WhereClause": {
+											"value": "@variables('endTimeStamp')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SOFEventsSQLDataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@pipeline().parameters.targetTable",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Update Start Date",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "ACTFetchDeltaData",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "startTimeStamp",
+								"value": {
+									"value": "@addToTime(variables('tempStartDate'), 1, 'Year', 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Update End Date",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "ACTFetchDeltaData",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "endTimeStamp",
+								"value": {
+									"value": "@addToTime(variables('tempEndDate'), 1, 'Year', 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Update Temp Start Date",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Update Start Date",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tempStartDate",
+								"value": {
+									"value": "@variables('startTimeStamp')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Update Temp End Date",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Update End Date",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tempEndDate",
+								"value": {
+									"value": "@variables('endTimeStamp')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			},
+			{
+				"name": "Truncate Staging Table",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[ETL].[TruncateStagingTable]",
+					"storedProcedureParameters": {
+						"TableName": {
+							"value": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bmecd9c5n"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "staging.SOFEvents"
+			},
+			"logTable": {
+				"type": "String",
+				"defaultValue": "etl.SOFEventsLoadInfo"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncSOFEvents"
+			},
+			"updateLogStoredProc": {
+				"type": "String",
+				"defaultValue": "etl.cp_updateLogSOFEventsLoadInfo"
+			},
+			"IsFullLoad": {
+				"type": "int",
+				"defaultValue": 1
+			}
+		},
+		"variables": {
+			"startTimeStamp": {
+				"type": "String",
+				"defaultValue": "2015-01-01"
+			},
+			"endTimeStamp": {
+				"type": "String",
+				"defaultValue": "2015-12-31"
+			},
+			"tempStartDate": {
+				"type": "String",
+				"defaultValue": "2015-01-01"
+			},
+			"tempEndDate": {
+				"type": "String",
+				"defaultValue": "2015-12-31"
+			},
+			"maxDate": {
+				"type": "String",
+				"defaultValue": "2200-12-31"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-05-20T15:48:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

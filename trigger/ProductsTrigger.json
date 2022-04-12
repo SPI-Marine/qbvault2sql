@@ -1,0 +1,40 @@
+{
+	"name": "ProductsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ProductsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "biuhrjz6v",
+					"targetTable": "staging.Products",
+					"logTable": "etl.ProductsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncProducts",
+					"updateLogStoredProc": "etl.cp_updateLogProductsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-04-02T12:15:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						59
+					],
+					"hours": [
+						23
+					]
+				}
+			}
+		}
+	}
+}

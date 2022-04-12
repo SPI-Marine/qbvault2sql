@@ -1,0 +1,32 @@
+{
+	"name": "ParcelsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ParcelsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bmetvurzg",
+					"targetTable": "staging.Parcels",
+					"logTable": "etl.ParcelsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncParcels",
+					"updateLogStoredProc": "etl.cp_updateLogParcelsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-04-02T12:13:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

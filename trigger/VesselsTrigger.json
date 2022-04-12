@@ -1,0 +1,32 @@
+{
+	"name": "VesselsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "VesselsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "binf7kupm",
+					"targetTable": "staging.Vessels",
+					"logTable": "etl.VesselsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncVessels",
+					"updateLogStoredProc": "etl.cp_updateLogVesselsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-04-02T12:21:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

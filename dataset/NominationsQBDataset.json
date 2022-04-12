@@ -1,0 +1,123 @@
+{
+	"name": "NominationsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bnv8h9t7z"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Related Vessel ID",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI COA ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Post Fixture ID_SUM",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI COA Trade Lane ID",
+				"type": "String"
+			},
+			{
+				"name": "Tent Cargo Nom_Original Qty",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Nom_Lacyan Commencement Original",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Nom_Lacyan Cancelling Original",
+				"type": "String"
+			},
+			{
+				"name": "Firm Cargo Nom_Qty",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Request_Lacyan Commencement Original",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Request_Lacyan Cancelling Original",
+				"type": "String"
+			},
+			{
+				"name": "Date Owners Sent Schedule of Available Vessels to Charterers",
+				"type": "String"
+			},
+			{
+				"name": "1st Monday of the Month",
+				"type": "String"
+			},
+			{
+				"name": "Cargo Nomination by Parcel",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Requested Qty",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Capacity Available",
+				"type": "String"
+			},
+			{
+				"name": "Tent Cargo Nom Date Original",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Nom_Date Original",
+				"type": "String"
+			},
+			{
+				"name": "Confirmation Date",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.14.33.287.200.221.231.232.233.245.246.247.254.264.268.269.240.239.128</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,55 @@
+{
+	"name": "IHSHSCodesQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "br4ikr62m"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Product Name",
+				"type": "String"
+			},
+			{
+				"name": "HS Code",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.15</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

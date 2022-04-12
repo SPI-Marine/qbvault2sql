@@ -1,0 +1,178 @@
+{
+	"name": "TimeChartererSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.TimeCharterer"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "VaultTCFixtureNumber",
+				"type": "String"
+			},
+			{
+				"name": "RelatedBrokerPICID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedBackupBrokerID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedOpsPICID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPIOfficeID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedContractAdminID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedNegotiatorID",
+				"type": "Int32"
+			},
+			{
+				"name": "ContractType",
+				"type": "String"
+			},
+			{
+				"name": "TCCPDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "CharterParty",
+				"type": "String"
+			},
+			{
+				"name": "VesselFixedAsOfficial",
+				"type": "String"
+			},
+			{
+				"name": "RelatedVesselID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedOwnerFullStyleID",
+				"type": "Int32"
+			},
+			{
+				"name": "OwnerRef",
+				"type": "String"
+			},
+			{
+				"name": "RelatedChartererFullStyleID",
+				"type": "Int32"
+			},
+			{
+				"name": "ChartererRef",
+				"type": "String"
+			},
+			{
+				"name": "Period",
+				"type": "Decimal"
+			},
+			{
+				"name": "PeriodUnits",
+				"type": "String"
+			},
+			{
+				"name": "OptionAdditionalPeriod1",
+				"type": "Decimal"
+			},
+			{
+				"name": "OptionAdditionalPeriod1Units",
+				"type": "String"
+			},
+			{
+				"name": "OptionAdditionalPeriod2",
+				"type": "Decimal"
+			},
+			{
+				"name": "OptionAdditionalPeriod2Units",
+				"type": "String"
+			},
+			{
+				"name": "ContractCommencement",
+				"type": "Date"
+			},
+			{
+				"name": "ContractExpirey",
+				"type": "Date"
+			},
+			{
+				"name": "RenewalDateDeclareBy",
+				"type": "Date"
+			},
+			{
+				"name": "LaycanCommencement",
+				"type": "DateTime"
+			},
+			{
+				"name": "LaycanCancelling",
+				"type": "DateTime"
+			},
+			{
+				"name": "CurrencyForHire",
+				"type": "String"
+			},
+			{
+				"name": "HirePaymentNotes",
+				"type": "String"
+			},
+			{
+				"name": "HireRateFirstPeriod",
+				"type": "Decimal"
+			},
+			{
+				"name": "HireRateSecondPeriod",
+				"type": "Decimal"
+			},
+			{
+				"name": "HireRateThirdPeriod",
+				"type": "Decimal"
+			},
+			{
+				"name": "HirePayable",
+				"type": "String"
+			},
+			{
+				"name": "FrequencyCommissionInvoiced",
+				"type": "String"
+			},
+			{
+				"name": "AddressCommission",
+				"type": "String"
+			},
+			{
+				"name": "BrokerCommission",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

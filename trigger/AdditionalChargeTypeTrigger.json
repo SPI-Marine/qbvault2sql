@@ -1,0 +1,32 @@
+{
+	"name": "AdditionalChargeTypeTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "AdditionalChargeTypePipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bn95a4fez",
+					"targetTable": "staging.AdditionalChargeType",
+					"logTable": "etl.AdditionalChargeTypeLoadInfo",
+					"syncStoredProc": "dbo.cp_syncAdditionalChargeType",
+					"updateLogStoredProc": "etl.cp_updateLogAdditionalChargeTypeLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 6,
+				"startTime": "2019-04-02T12:01:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

@@ -1,0 +1,66 @@
+{
+	"name": "RowLevelSecuritySQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.RowLevelSecurity"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "Product",
+				"type": "String"
+			},
+			{
+				"name": "ChartererParent",
+				"type": "String"
+			},
+			{
+				"name": "OwnerParent",
+				"type": "String"
+			},
+			{
+				"name": "Username",
+				"type": "String"
+			},
+			{
+				"name": "LoadRegion",
+				"type": "String"
+			},
+			{
+				"name": "DischargeRegion",
+				"type": "String"
+			},
+			{
+				"name": "FullStyleName",
+				"type": "String"
+			},
+			{
+				"name": "GUID",
+				"type": "String"
+			},
+			{
+				"name": "MinCPDateToPull",
+				"type": "Date"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,338 @@
+{
+	"name": "PostFixturesPipeLine",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTLookupLastLoaded",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlGenericDataset",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ACTSetLastLoadedDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:01:40"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Related Vessel ID": "RelatedVessel",
+							"Related Owner Full Style ID": "RelatedOwnerFullStyle",
+							"Related Charterer Full Style ID": "RelatedChartererFullStyle",
+							"Broker PIC Email (TM)": "RelatedBroker",
+							"Ops PIC Email (TM)": "RelatedOpsPrimary",
+							"Ops Backup Email (TM)": "RelatedOpsBackup",
+							"Related Nomination ID": "RelatedLiftingNomination",
+							"Record ID#": "RecordId",
+							"CP Date": "CPDate",
+							"CP Form": "CPForm",
+							"Laycan Cancel Original_ADMIN": "LaycanCancelOrig",
+							"Demurrage Rate Per Day_ENTRY": "DemurrageRate",
+							"Time Bar": "TimeBar",
+							"Address Commission Percentage_ADMIN": "AddressCommissionPercent",
+							"Broker Commission Percentage for Comm Inv_ADMIN": "BrokerCommissionPercent",
+							"Laytime Allowed Fixture Load_ENTRY_ADMIN": "LaytimeAllowedLoad",
+							"Laytime Allowed Fixture Disch_ENTRY_ADMIN": "LaytimeAllowedDisch",
+							"Laytime Reversible_ADMIN": "ShincReversible",
+							"Vessel Originally Fixed As_SNAP_ADMIN": "VesselNameSnap",
+							"Demurrage Amount Agreed_ADMIN": "DemurrageAmountAgreed",
+							"Charter To Be Invoiced Commission_ADMIN": "CharterInvoiced",
+							"Payment Type": "PaymentType",
+							"Freight Lump Sum_Data Entry_ADMIN": "FreightLumpSumEntry",
+							"Disch FAC_ADMIN": "DischFAC",
+							"Laytime Allowed Type Fixture_ENTRY": "LaytimeOption",
+							"Owners Ref_ADMIN": "OwnersRef",
+							"Charterers Ref_ADMIN": "CharterersRef",
+							"Exchange Rate_1 USD Equals_review": "ExchangeRate",
+							"Currency Invoice_OLD": "CurrencyInvoice",
+							"Laycan Commencement_Narrowed": "LaycanCommencementNarrowed",
+							"Laycan Cancelling_Narrowed": "LaycanCancellingNarrowed",
+							"Chartering PIC_Snap": "CharteringPicSnap",
+							"Operations PIC_Snap": "OperationsPicSnap",
+							"Laycan to be Narrowed by": "LaycanToBeNarrowedBy",
+							"Broker Comm applies to Demurrage_CB": "BrokerCommDemurrage",
+							"Add Comm applies to Deadfreight_ADMIN": "AddCommDeadFreight",
+							"Demurrage Claim Received Date": "DemurrageClaimReceived",
+							"Voyage Number_ADMIN": "VoyageNumber",
+							"Laycan to be Amended": "LaycanToBeAmended",
+							"Laycan Cancelling_Amended": "LaycanCancellingAmended",
+							"Laycan Commencement_Amended": "LaycanCommencementAmended",
+							"Currency CP_ADMIN": "CurrencyCP",
+							"Status Category_ADMIN": "FixtureStatusCategory",
+							"Frt Rate PMT (bss PMT or Lump Sum)": "FrtRatePmt",
+							"Broker Frt Commission excluding Addl Charges_ADMIN": "BrokerFrtComm",
+							"SPI Fixture #": "P2FixtureRefNum",
+							"Vessel Fixed As_Official": "VesselFixedOfficial",
+							"Related SPI COA ID": "RelatedSPICOAId",
+							"Date Created": "DateCreated",
+							"Date Modified": "DateModified",
+							"Load Port 1 Record ID (LDP)_ADMIN": "LoadPort1RecId",
+							"Load Port 2 Record ID (LDP)_ADMIN": "LoadPort2RecId",
+							"Load Port 3 Record ID (LDP)_ADMIN": "LoadPort3RecId",
+							"Disch Port 1 Record ID (LDP)_ADMIN": "DischPort1RecId",
+							"Disch Port 2 Record ID (LDP)_ADMIN": "DischPort2RecId",
+							"Disch Port 3 Record ID (LDP)_ADMIN": "DischPort3RecId",
+							"Disch Port 4 Record ID (LDP)_ADMIN": "DischPort4RecId",
+							"Disch Port 5 Record ID (LDP)_ADMIN": "DischPort5RecId",
+							"Disch Port 6 Record ID (LDP)_ADMIN": "DischPort6RecId",
+							"Disch Port 7 Record ID (LDP)_ADMIN": "DischPort7RecId",
+							"Laycan Commencement  Original_ADMIN": "LaycanCommencementOriginal",
+							"Broker Comm applies to Deadfreight_CB": "BrokerCommDeadFreight",
+							"Laytime Allowed Fixture Disch mtph_QBC": "LAF_Disch_Mtph_QBC",
+							"Laytime Allowed Fixture Load mtph_QBC": "LAF_Load_Mtph_QBC",
+							"Laytime Allowed FIXTURE Total hrs _sum": "LAF_Total_hrs_QBC",
+							"Laytime Allowed Type Fixture_QBC": "LaytimeAllowedTypeFixture_QBC",
+							"Add Comm applies to Demurrage_ADMIN": "Add_Comm_applies_to_Demurrage_ADMIN",
+							"Add Comm applies to Frt_ADMIN": "Add_Comm_applies_to_Frt_ADMIN",
+							"Zero Demurrage": "ZeroDemurrage",
+							"Laycan Cancelling Final_QBC": "Laycan_Cancelling_Final_QBC",
+							"Laycan Commencement Final_QBC": "Laycan_Commencement_Final_QBC",
+							"Status Detailed_ADMIN": "FixtureStatusDetailed",
+							"Fixture Type": "FixtureType",
+							"Laycan Commencement Time_ADMIN": "Laycan_Commencement_Time_ADMIN",
+							"Laycan Cancelling Time_ADMIN": "Laycan_Cancelling_Time_ADMIN",
+							"Related SPI Office ID": "RelatedSPIOfficeID",
+							"Laytime Based On_ADMIN": "LaytimeBasedOn_ADMIN",
+							"SPI Initial Demurrage Estimate": "SPIInitialDemurrageEstimate",
+							"Load Port Region (P)_ADMIN": "LoadPortRegion",
+							"Disch Port Region (P)_ADMIN": "DischPortRegion",
+							"Frt Rate Projection_ADMIN": "FrtRateProjection",
+							"Voyage Summary Report Comments_ADMIN": "VoyageSummaryReportComments_ADMIN",
+							"Extra Laytime for Fixture_Entry_ADMIN": "ExtraLaytimeforFixture_Entry_ADMIN",
+							"Related SPI COA Trade Lane ID": "RelatedSPICOATradeLaneID",
+							"Port Time Rate_ENTRY": "PortTimeRate_ENTRY"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "PostFixturesQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"StartDate_WhereClause": {
+								"value": "@variables('varLastLoadedDate')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "PostFixturesSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "@pipeline().parameters.targetTable"
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetStartTimeStamp",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "startTimeStamp",
+					"value": {
+						"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ACTUpdateLog",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTSyncDestination",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ACTSetStartTimeStamp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.updateLogStoredProc",
+						"type": "Expression"
+					},
+					"storedProcedureParameters": {
+						"LastProcessed": {
+							"value": {
+								"value": "@variables('startTimeStamp')",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetLastLoadedDate",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "varLastLoadedDate",
+					"value": {
+						"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bmd6t28k5"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "staging.PostFixtures"
+			},
+			"logTable": {
+				"type": "String",
+				"defaultValue": "etl.PostFixturesLoadInfo"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncPostFixtures"
+			},
+			"updateLogStoredProc": {
+				"type": "String",
+				"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
+			},
+			"IsFullLoad": {
+				"type": "int",
+				"defaultValue": 1
+			}
+		},
+		"variables": {
+			"startTimeStamp": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			},
+			"varLastLoadedDate": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-08-13T10:15:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,195 @@
+{
+	"name": "ParcelsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bmetvurzg"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Bill_Lading_Date",
+				"type": "String"
+			},
+			{
+				"name": "Date Modified",
+				"type": "String"
+			},
+			{
+				"name": "Date Created",
+				"type": "String"
+			},
+			{
+				"name": "Out-Turn Qty",
+				"type": "String"
+			},
+			{
+				"name": "Ship Loaded Qty",
+				"type": "String"
+			},
+			{
+				"name": "Ship Discharge Qty",
+				"type": "String"
+			},
+			{
+				"name": "Nominated Qty",
+				"type": "String"
+			},
+			{
+				"name": "BL Qty",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Paytment Type",
+				"type": "String"
+			},
+			{
+				"name": "Unit",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI Fixture ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Load Parcel Port ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Load Parcel Berth ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Disch Parcel Port ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Market Info ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Nomination ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Disch Parcel Berth ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Parcel Product ID",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Freight Amount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Demurrage Vault Estimated Amount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Demurrage Agreed Pro-ration_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Demurrage Agreed Amount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Demurrage Claim Amount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Deadfreight Qty",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Number_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Parcel Frt Rate CP PMT_Data_Entry",
+				"type": "String"
+			},
+			{
+				"name": "Supplier Name (S)",
+				"type": "String"
+			},
+			{
+				"name": "Receiver Name (R)",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "Tentative Cargo Nom Qty",
+				"type": "String"
+			},
+			{
+				"name": "Tentative Cargo Nom Date Original",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Request_Laycan Commencement Original",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Request_Laycan Cancelling Original",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Requested Quantity",
+				"type": "String"
+			},
+			{
+				"name": "Hypothetical Frt Rate",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.425.2.1.289.413.414.165.459.117.116.75.83.90.154.93.433.505.156.529.115.634.653.652.651.671.555.76.656.621.521.695.696.701.702.703.704</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

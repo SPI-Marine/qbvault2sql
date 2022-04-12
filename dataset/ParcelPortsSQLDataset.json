@@ -1,0 +1,82 @@
+{
+	"name": "ParcelPortsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.ParcelPorts"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "Order",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSpiFixtureId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "ETAStart",
+				"type": "String"
+			},
+			{
+				"name": "ETAEnd",
+				"type": "String"
+			},
+			{
+				"name": "ETAStartOriginal",
+				"type": "String"
+			},
+			{
+				"name": "RelatedETAUpdateId",
+				"type": "Int32"
+			},
+			{
+				"name": "LaytimeAllowedPortMtph_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LaytimeAllowedTypePort_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			},
+			{
+				"name": "ETAEndOriginal",
+				"type": "String"
+			},
+			{
+				"name": "ChartererDeliveryCommencementWindow",
+				"type": "String"
+			},
+			{
+				"name": "ChartererDeliveryCancellingWindow",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,32 @@
+{
+	"name": "FullStylesTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "FullStylesPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bkwv42zaf",
+					"targetTable": "staging.FullStyles",
+					"logTable": "etl.FullStylesLoadInfo",
+					"syncStoredProc": "dbo.cp_syncFullStyles",
+					"updateLogStoredProc": "etl.cp_updateLogFullStylesLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 6,
+				"startTime": "2019-12-05T16:30:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

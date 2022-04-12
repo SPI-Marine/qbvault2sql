@@ -1,0 +1,285 @@
+{
+	"name": "TimeChartererPipeLine",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTLookupLastLoaded",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlGenericDataset",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ACTSetLastLoadedDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Record ID#": "RecordID",
+							"Status": "Status",
+							"Vault TC Fixture Number": "VaultTCFixtureNumber",
+							"Related Broker PIC ID": "RelatedBrokerPICID",
+							"Related Backup Broker ID": "RelatedBackupBrokerID",
+							"Related Ops PIC ID": "RelatedOpsPICID",
+							"Related SPI Office ID": "RelatedSPIOfficeID",
+							"Related Contract Admin ID": "RelatedContractAdminID",
+							"Related Negotiator ID": "RelatedNegotiatorID",
+							"Contract Type": "ContractType",
+							"TC CP Date": "TCCPDate",
+							"Charter Party": "CharterParty",
+							"Vessel Fixed As - Official": "VesselFixedAsOfficial",
+							"Related Vessel ID": "RelatedVesselID",
+							"Related Owner Full Style ID": "RelatedOwnerFullStyleID",
+							"Owner Ref": "OwnerRef",
+							"Related Charterer Full Style ID": "RelatedChartererFullStyleID",
+							"Charterer Ref": "ChartererRef",
+							"Period": "Period",
+							"Period Units": "PeriodUnits",
+							"Option Additional Period 1": "OptionAdditionalPeriod1",
+							"Option Additional Period 1 Units": "OptionAdditionalPeriod1Units",
+							"Option Additional Period 2": "OptionAdditionalPeriod2",
+							"Option Additional Period 2 Units": "OptionAdditionalPeriod2Units",
+							"Contract Commencement": "ContractCommencement",
+							"Contract Expirey": "ContractExpirey",
+							"Renewal Date Declare By": "RenewalDateDeclareBy",
+							"Laycan Commencement": "LaycanCommencement",
+							"Laycan Cancelling": "LaycanCancelling",
+							"Currency (for hire)": "CurrencyForHire",
+							"Hire Payment Notes": "HirePaymentNotes",
+							"Hire Rate (first period)": "HireRateFirstPeriod",
+							"Hire Rate (second period)": "HireRateSecondPeriod",
+							"Hire Rate (third period)": "HireRateThirdPeriod",
+							"Hire Payable": "HirePayable",
+							"Frequency Commission Invoiced": "FrequencyCommissionInvoiced",
+							"Address Commission": "AddressCommission",
+							"Broker Commission": "BrokerCommission"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "TimeChartererQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": "@pipeline().parameters.sourceTable",
+							"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "TimeChartererSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "@pipeline().parameters.targetTable"
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetStartTimeStamp",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "startTimeStamp",
+					"value": {
+						"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ACTUpdateLog",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTSyncDestination",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ACTSetStartTimeStamp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.updateLogStoredProc",
+						"type": "Expression"
+					},
+					"storedProcedureParameters": {
+						"LastProcessed": {
+							"value": {
+								"value": "@variables('startTimeStamp')",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetLastLoadedDate",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "varLastLoadedDate",
+					"value": {
+						"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bnc56z7ix"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "staging.TimeCharterer"
+			},
+			"logTable": {
+				"type": "String",
+				"defaultValue": "etl.TimeChartererLoadInfo"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncTimeCharterer"
+			},
+			"updateLogStoredProc": {
+				"type": "String",
+				"defaultValue": "etl.cp_updateLogTimeChartererLoadInfo"
+			},
+			"IsFullLoad": {
+				"type": "int",
+				"defaultValue": 1
+			}
+		},
+		"variables": {
+			"startTimeStamp": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			},
+			"varLastLoadedDate": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-08-20T15:43:26Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

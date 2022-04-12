@@ -1,0 +1,82 @@
+{
+	"name": "VesselItinerarySQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.VesselItinerary"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPIFixtureID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedParcelPortID",
+				"type": "String"
+			},
+			{
+				"name": "RelatedPortID",
+				"type": "String"
+			},
+			{
+				"name": "ETAStart",
+				"type": "String"
+			},
+			{
+				"name": "ETAEnd",
+				"type": "String"
+			},
+			{
+				"name": "ItineraryPortType",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "DateModified",
+				"type": "String"
+			},
+			{
+				"name": "ETAStartOriginal_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "OriginalETACreatedOn_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "DateETAWasUpdatedByOperator_BETA",
+				"type": "String"
+			},
+			{
+				"name": "VesselPortStatus_Override",
+				"type": "String"
+			},
+			{
+				"name": "VesselPortStatusOfficial",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

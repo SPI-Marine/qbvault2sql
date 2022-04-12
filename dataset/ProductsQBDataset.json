@@ -1,0 +1,87 @@
+{
+	"name": "ProductsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "biuhrjz6v"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "Int32"
+			},
+			{
+				"name": "Product Name",
+				"type": "String"
+			},
+			{
+				"name": "Specific Gravity",
+				"type": "Decimal"
+			},
+			{
+				"name": "Required Coating",
+				"type": "String"
+			},
+			{
+				"name": "EU",
+				"type": "String"
+			},
+			{
+				"name": "CIQ",
+				"type": "String"
+			},
+			{
+				"name": "NIOP",
+				"type": "String"
+			},
+			{
+				"name": "Notes",
+				"type": "String"
+			},
+			{
+				"name": "Related Product Type ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Liquid Type",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi> <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.6.17.18.21.22.23.24.60.31</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,147 @@
+{
+	"name": "MarketInfoQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "biuhnr6q6"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Date Modified",
+				"type": "String"
+			},
+			{
+				"name": "Report Date",
+				"type": "String"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			},
+			{
+				"name": "Related Load Port 1 ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Disch Port 1 ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Charterer ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Load Port 2 ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Disch Port 2 ID",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 3 Related ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Vessel ID",
+				"type": "String"
+			},
+			{
+				"name": "Publishable_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Related Product ID",
+				"type": "String"
+			},
+			{
+				"name": "Commencement",
+				"type": "String"
+			},
+			{
+				"name": "Cancelling",
+				"type": "String"
+			},
+			{
+				"name": "Related Competitor ID",
+				"type": "String"
+			},
+			{
+				"name": "Freight Rate PMT Entry",
+				"type": "String"
+			},
+			{
+				"name": "Product Quantity_ENTRY",
+				"type": "String"
+			},
+			{
+				"name": "Unit",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Link ID",
+				"type": "String"
+			},
+			{
+				"name": "Internal",
+				"type": "String"
+			},
+			{
+				"name": "Basis Data Entry",
+				"type": "String"
+			},
+			{
+				"name": "PANDC",
+				"type": "String"
+			},
+			{
+				"name": "Last Modified By",
+				"type": "String"
+			},
+			{
+				"name": "Notes",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.2.31.37.25.27.143.286.290.294.193.377.21.32.33.229.29.18.109.209.20.301.19.5.30</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

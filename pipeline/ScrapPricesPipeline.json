@@ -1,0 +1,263 @@
+{
+	"name": "ScrapPricesPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTLookupLastLoaded",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "select ll.* from\n(SELECT TOP 1 convert(varchar(50), LastLoaded, 120) LastLoaded \n, convert(varchar(50), GETDATE(), 120) StartDateTime \nFROM [ETL].[ScrapPricesLoadInfo]\nORDER BY LastLoaded DESC) ll\nunion\nselect '1/1/1900', getdate()\n",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlGenericDataset",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ACTSetLastLoadedDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"QBRecId": "QBRecId",
+							"AssessmentDate": "AssessmentDate",
+							"ScrapLocation": "ScrapLocation",
+							"USD_LDGAverage": "USD_LDGAverage",
+							"Comment": "Comment",
+							"VesselType": "VesselType",
+							"LDTRange": "LDTRange"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ScrapPricesQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"StartDate_WhereClause": {
+								"value": "@variables('varLastLoadedDate')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ScrapPricesSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetStartTimeStamp",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "startTimeStamp",
+					"value": {
+						"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ACTUpdateLog",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTSyncDestination",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ACTSetStartTimeStamp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.updateLogStoredProc",
+						"type": "Expression"
+					},
+					"storedProcedureParameters": {
+						"LastProcessed": {
+							"value": {
+								"value": "@variables('startTimeStamp')",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetLastLoadedDate",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "varLastLoadedDate",
+					"value": {
+						"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bpeitzc6w"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "Staging.ScrapPrices"
+			},
+			"logTable": {
+				"type": "String",
+				"defaultValue": "ETL.ScrapPricesLoadInfo"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncScrapPrices"
+			},
+			"updateLogStoredProc": {
+				"type": "String",
+				"defaultValue": "ETL.cp_updateLogScrapPricesLoadInfo"
+			},
+			"IsFullLoad": {
+				"type": "int",
+				"defaultValue": 1
+			}
+		},
+		"variables": {
+			"startTimeStamp": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			},
+			"varLastLoadedDate": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2019-11-06T16:51:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

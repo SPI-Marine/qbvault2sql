@@ -1,0 +1,102 @@
+{
+	"name": "PositionsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Positions"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "DateCreated",
+				"type": "DateTime"
+			},
+			{
+				"name": "DateModified",
+				"type": "DateTime"
+			},
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "RecordOwner",
+				"type": "String"
+			},
+			{
+				"name": "LastModifiedBy",
+				"type": "String"
+			},
+			{
+				"name": "DateOpen",
+				"type": "DateTime"
+			},
+			{
+				"name": "EndDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "StatusCalculation_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "RelatedVesselID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedPortID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedShippingAreaID_P",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedProductID",
+				"type": "Int32"
+			},
+			{
+				"name": "LastCargo",
+				"type": "String"
+			},
+			{
+				"name": "FOFSA_prod",
+				"type": "String"
+			},
+			{
+				"name": "PositionType",
+				"type": "String"
+			},
+			{
+				"name": "RelatedPositionDirectionID",
+				"type": "Int32"
+			},
+			{
+				"name": "Direction",
+				"type": "String"
+			},
+			{
+				"name": "RelatedOwnerParentID",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

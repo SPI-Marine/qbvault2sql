@@ -1,0 +1,230 @@
+{
+	"name": "VesselsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Vessels"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "VesselName",
+				"type": "String"
+			},
+			{
+				"name": "Draft",
+				"type": "String"
+			},
+			{
+				"name": "YearBuilt",
+				"type": "Int32"
+			},
+			{
+				"name": "Coils",
+				"type": "String"
+			},
+			{
+				"name": "DeadWeight",
+				"type": "Decimal"
+			},
+			{
+				"name": "Beam",
+				"type": "Decimal"
+			},
+			{
+				"name": "LOA",
+				"type": "Decimal"
+			},
+			{
+				"name": "RelatedOwnerParentId",
+				"type": "Int32"
+			},
+			{
+				"name": "Yard",
+				"type": "String"
+			},
+			{
+				"name": "IceEntry",
+				"type": "String"
+			},
+			{
+				"name": "RegisteredOwner",
+				"type": "String"
+			},
+			{
+				"name": "CleanDirty",
+				"type": "String"
+			},
+			{
+				"name": "TcCandidate",
+				"type": "String"
+			},
+			{
+				"name": "IMOType",
+				"type": "String"
+			},
+			{
+				"name": "Tanks",
+				"type": "Decimal"
+			},
+			{
+				"name": "Pumps",
+				"type": "Decimal"
+			},
+			{
+				"name": "Segs",
+				"type": "Decimal"
+			},
+			{
+				"name": "CBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "Hull",
+				"type": "String"
+			},
+			{
+				"name": "ExName",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Trade",
+				"type": "String"
+			},
+			{
+				"name": "CountryOfBuild",
+				"type": "String"
+			},
+			{
+				"name": "Flag",
+				"type": "String"
+			},
+			{
+				"name": "DataSource",
+				"type": "String"
+			},
+			{
+				"name": "CommercialOwnerOperator",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSaleId",
+				"type": "Int32"
+			},
+			{
+				"name": "ArchivedVsl",
+				"type": "String"
+			},
+			{
+				"name": "ReasonForArchive",
+				"type": "String"
+			},
+			{
+				"name": "IGSType",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "RelatedIceClassId",
+				"type": "Int32"
+			},
+			{
+				"name": "IMOCertificateRemoved",
+				"type": "String"
+			},
+			{
+				"name": "KTRNumber",
+				"type": "String"
+			},
+			{
+				"name": "STSTCBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "MarineLineCBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "InterlineCBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "EpoxyCBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "ZincCBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "IMO1CBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "IMO2CBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "IMO3CBM",
+				"type": "Decimal"
+			},
+			{
+				"name": "YdNo",
+				"type": "String"
+			},
+			{
+				"name": "NBContractDate",
+				"type": "String"
+			},
+			{
+				"name": "RetiredDate",
+				"type": "String"
+			},
+			{
+				"name": "KTRChangeDate",
+				"type": "String"
+			},
+			{
+				"name": "DeliveryDate",
+				"type": "String"
+			},
+			{
+				"name": "VesselType",
+				"type": "String"
+			},
+			{
+				"name": "RelatedCoatingId",
+				"type": "Int32"
+			},
+			{
+				"name": "IMONumber",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,74 @@
+{
+	"name": "FreightRatesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.FreightRates"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedProductId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedLoadPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "DischRelatedPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "DateReported",
+				"type": "String"
+			},
+			{
+				"name": "ProductQty",
+				"type": "Decimal"
+			},
+			{
+				"name": "DateModified",
+				"type": "String"
+			},
+			{
+				"name": "Currency",
+				"type": "String"
+			},
+			{
+				"name": "FrtRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "AudienceCategory",
+				"type": "String"
+			},
+			{
+				"name": "CustomerSpecific",
+				"type": "String"
+			},
+			{
+				"name": "Source",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

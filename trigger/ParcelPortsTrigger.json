@@ -1,0 +1,32 @@
+{
+	"name": "ParcelPortsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ParcelPortsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bmf5abifq",
+					"targetTable": "staging.ParcelPorts",
+					"logTable": "etl.ParcelPortsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncParcelPorts",
+					"updateLogStoredProc": "etl.cp_updateLogParcelPortsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-04-02T12:13:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

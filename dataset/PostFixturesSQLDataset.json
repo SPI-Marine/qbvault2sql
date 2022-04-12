@@ -1,0 +1,366 @@
+{
+	"name": "PostFixturesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.PostFixtures"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RelatedVessel",
+				"type": "String"
+			},
+			{
+				"name": "RelatedOwnerFullStyle",
+				"type": "String"
+			},
+			{
+				"name": "RelatedChartererFullStyle",
+				"type": "String"
+			},
+			{
+				"name": "RelatedBroker",
+				"type": "String"
+			},
+			{
+				"name": "RelatedOpsPrimary",
+				"type": "String"
+			},
+			{
+				"name": "RelatedOpsBackup",
+				"type": "String"
+			},
+			{
+				"name": "RelatedLiftingNomination",
+				"type": "String"
+			},
+			{
+				"name": "RecordId",
+				"type": "String"
+			},
+			{
+				"name": "CPDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "CPForm",
+				"type": "String"
+			},
+			{
+				"name": "LaycanCancelOrig",
+				"type": "DateTime"
+			},
+			{
+				"name": "DemurrageRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "TimeBar",
+				"type": "String"
+			},
+			{
+				"name": "AddressCommissionPercent",
+				"type": "String"
+			},
+			{
+				"name": "BrokerCommissionPercent",
+				"type": "String"
+			},
+			{
+				"name": "LaytimeAllowedLoad",
+				"type": "Decimal"
+			},
+			{
+				"name": "LaytimeAllowedDisch",
+				"type": "String"
+			},
+			{
+				"name": "ShincReversible",
+				"type": "String"
+			},
+			{
+				"name": "VesselNameSnap",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageAmountAgreed",
+				"type": "Decimal"
+			},
+			{
+				"name": "CharterInvoiced",
+				"type": "String"
+			},
+			{
+				"name": "PaymentType",
+				"type": "String"
+			},
+			{
+				"name": "FreightLumpSumEntry",
+				"type": "Decimal"
+			},
+			{
+				"name": "DischFAC",
+				"type": "String"
+			},
+			{
+				"name": "LaytimeOption",
+				"type": "String"
+			},
+			{
+				"name": "OwnersRef",
+				"type": "String"
+			},
+			{
+				"name": "CharterersRef",
+				"type": "String"
+			},
+			{
+				"name": "ExchangeRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "CurrencyInvoice",
+				"type": "String"
+			},
+			{
+				"name": "LaycanCommencementNarrowed",
+				"type": "String"
+			},
+			{
+				"name": "LaycanCancellingNarrowed",
+				"type": "String"
+			},
+			{
+				"name": "CharteringPicSnap",
+				"type": "String"
+			},
+			{
+				"name": "OperationsPicSnap",
+				"type": "String"
+			},
+			{
+				"name": "LaycanToBeNarrowedBy",
+				"type": "String"
+			},
+			{
+				"name": "BrokerCommDemurrage",
+				"type": "String"
+			},
+			{
+				"name": "AddCommDeadFreight",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageClaimReceived",
+				"type": "String"
+			},
+			{
+				"name": "VoyageNumber",
+				"type": "String"
+			},
+			{
+				"name": "LaycanToBeAmended",
+				"type": "String"
+			},
+			{
+				"name": "LaycanCancellingAmended",
+				"type": "String"
+			},
+			{
+				"name": "LaycanCommencementAmended",
+				"type": "String"
+			},
+			{
+				"name": "CurrencyCP",
+				"type": "String"
+			},
+			{
+				"name": "FixtureStatusCategory",
+				"type": "String"
+			},
+			{
+				"name": "FrtRatePmt",
+				"type": "Decimal"
+			},
+			{
+				"name": "BrokerFrtComm",
+				"type": "Decimal"
+			},
+			{
+				"name": "P2FixtureRefNum",
+				"type": "String"
+			},
+			{
+				"name": "VesselFixedOfficial",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPICOAId",
+				"type": "String"
+			},
+			{
+				"name": "DateCreated",
+				"type": "DateTime"
+			},
+			{
+				"name": "DateModified",
+				"type": "DateTime"
+			},
+			{
+				"name": "LoadPort1RecId",
+				"type": "String"
+			},
+			{
+				"name": "LoadPort2RecId",
+				"type": "String"
+			},
+			{
+				"name": "LoadPort3RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort1RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort2RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort3RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort4RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort5RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort6RecId",
+				"type": "String"
+			},
+			{
+				"name": "DischPort7RecId",
+				"type": "String"
+			},
+			{
+				"name": "LaycanCommencementOriginal",
+				"type": "DateTime"
+			},
+			{
+				"name": "BrokerCommDeadFreight",
+				"type": "String"
+			},
+			{
+				"name": "LAF_Disch_Mtph_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LAF_Load_Mtph_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LAF_Total_hrs_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LaytimeAllowedTypeFixture_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Add_Comm_applies_to_Demurrage_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Add_Comm_applies_to_Frt_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "ZeroDemurrage",
+				"type": "String"
+			},
+			{
+				"name": "Laycan_Cancelling_Final_QBC",
+				"type": "DateTime"
+			},
+			{
+				"name": "Laycan_Commencement_Final_QBC",
+				"type": "DateTime"
+			},
+			{
+				"name": "FixtureStatusDetailed",
+				"type": "String"
+			},
+			{
+				"name": "FixtureType",
+				"type": "String"
+			},
+			{
+				"name": "Laycan_Commencement_Time_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laycan_Cancelling_Time_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPIOfficeID",
+				"type": "Int32"
+			},
+			{
+				"name": "LaytimeBasedOn_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "SPIInitialDemurrageEstimate",
+				"type": "Decimal"
+			},
+			{
+				"name": "LoadPortRegion",
+				"type": "String"
+			},
+			{
+				"name": "DischPortRegion",
+				"type": "String"
+			},
+			{
+				"name": "FrtRateProjection",
+				"type": "Decimal"
+			},
+			{
+				"name": "VoyageSummaryReportComments_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "ExtraLaytimeforFixture_Entry_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPICOATradeLaneID",
+				"type": "Int32"
+			},
+			{
+				"name": "PortTimeRate_ENTRY",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

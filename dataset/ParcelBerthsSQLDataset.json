@@ -1,0 +1,70 @@
+{
+	"name": "ParcelBerthsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.ParcelBerths"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "Prorate",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSpiFixtureId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedBerthId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "LaytimeAllowedBerthHrs_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LaytimeAllowedBerthMtph_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LaytimeTypeBerth_QBC",
+				"type": "String"
+			},
+			{
+				"name": "RelatedLDPId",
+				"type": "Int32"
+			},
+			{
+				"name": "BerthDemurrage_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "LAYTIME TYPE BERTH OFFICIAL_QBC",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

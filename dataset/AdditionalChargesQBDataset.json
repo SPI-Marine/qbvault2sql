@@ -1,0 +1,99 @@
+{
+	"name": "AdditionalChargesQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bmm8pdza7"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			},
+			{
+				"name": "Cost to Count Toward Commission",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "Amount",
+				"type": "String"
+			},
+			{
+				"name": "Planned",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI Fixture ID",
+				"type": "String"
+			},
+			{
+				"name": "Bunker Qty",
+				"type": "String"
+			},
+			{
+				"name": "Bunker Price",
+				"type": "String"
+			},
+			{
+				"name": "Related Additional Charge Type ID",
+				"type": "String"
+			},
+			{
+				"name": "Do Not Include In Additional Charge Calculation",
+				"type": "String"
+			},
+			{
+				"name": "Apply Address Commission_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Proration Type",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.6.7.8.9.10.11.207.208.299.312.116.47</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

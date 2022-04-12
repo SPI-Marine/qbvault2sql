@@ -1,0 +1,32 @@
+{
+	"name": "ParcelBerthsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ParcelBerthsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bm3raeq5e",
+					"targetTable": "staging.ParcelBerths",
+					"logTable": "etl.ParcelBerthsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncParcelBerths",
+					"updateLogStoredProc": "etl.cp_updateLogParcelBerthsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-10-02T16:50:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

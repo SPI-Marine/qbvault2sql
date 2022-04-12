@@ -1,0 +1,40 @@
+{
+	"name": "BerthsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "BerthsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bk2txxzex",
+					"targetTable": "staging.Berths",
+					"logTable": "etl.BerthsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncBerths",
+					"updateLogStoredProc": "etl.cp_updateLogBerthsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-04-02T11:56:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						59
+					],
+					"hours": [
+						23
+					]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,199 @@
+{
+	"name": "TimeChartererQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bnc56z7ix"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "Vault TC Fixture Number",
+				"type": "String"
+			},
+			{
+				"name": "Related Broker PIC ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Backup Broker ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Ops PIC ID",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI Office ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Contract Admin ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Negotiator ID",
+				"type": "String"
+			},
+			{
+				"name": "Contract Type",
+				"type": "String"
+			},
+			{
+				"name": "TC CP Date",
+				"type": "String"
+			},
+			{
+				"name": "Charter Party",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Fixed As - Official",
+				"type": "String"
+			},
+			{
+				"name": "Related Vessel ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Full Style ID",
+				"type": "String"
+			},
+			{
+				"name": "Owner Ref",
+				"type": "String"
+			},
+			{
+				"name": "Related Charterer Full Style ID",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Ref",
+				"type": "String"
+			},
+			{
+				"name": "Period",
+				"type": "String"
+			},
+			{
+				"name": "Period Units",
+				"type": "String"
+			},
+			{
+				"name": "Option Additional Period 1",
+				"type": "String"
+			},
+			{
+				"name": "Option Additional Period 1 Units",
+				"type": "String"
+			},
+			{
+				"name": "Option Additional Period 2",
+				"type": "String"
+			},
+			{
+				"name": "Option Additional Period 2 Units",
+				"type": "String"
+			},
+			{
+				"name": "Contract Commencement",
+				"type": "String"
+			},
+			{
+				"name": "Contract Expirey",
+				"type": "String"
+			},
+			{
+				"name": "Renewal Date Declare By",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Commencement",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Cancelling",
+				"type": "String"
+			},
+			{
+				"name": "Currency (for hire)",
+				"type": "String"
+			},
+			{
+				"name": "Hire Payment Notes",
+				"type": "String"
+			},
+			{
+				"name": "Hire Rate (first period)",
+				"type": "String"
+			},
+			{
+				"name": "Hire Rate (second period)",
+				"type": "String"
+			},
+			{
+				"name": "Hire Rate (third period)",
+				"type": "String"
+			},
+			{
+				"name": "Hire Payable",
+				"type": "String"
+			},
+			{
+				"name": "Frequency Commission Invoiced",
+				"type": "String"
+			},
+			{
+				"name": "Address Commission",
+				"type": "String"
+			},
+			{
+				"name": "Broker Commission",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.6.47.94.107.91.112.101.104.110.27.25.84.29.85.43.88.44.7.8.9.10.11.12.98.99.100.17.18.40.45.19.20.21.22.46.23.24</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

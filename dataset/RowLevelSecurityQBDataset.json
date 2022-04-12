@@ -1,0 +1,83 @@
+{
+	"name": "RowLevelSecurityQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bqictfrvd"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Product_SQL",
+				"type": "String"
+			},
+			{
+				"name": "Charterer Parent_SQL",
+				"type": "String"
+			},
+			{
+				"name": "Owner Parent_SQL",
+				"type": "String"
+			},
+			{
+				"name": "Username_SQL",
+				"type": "String"
+			},
+			{
+				"name": "Load Area Region_SQL",
+				"type": "String"
+			},
+			{
+				"name": "Disch Area Region_SQL",
+				"type": "String"
+			},
+			{
+				"name": "Full Style Name_SQL",
+				"type": "String"
+			},
+			{
+				"name": "GUID_SQL (U)",
+				"type": "String"
+			},
+			{
+				"name": "MinCPDateToPull_SQL",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}</query>    <includeRids>1</includeRids>    <clist>3.7.8.9.15.16.18.20.27.30</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

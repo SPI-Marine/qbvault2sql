@@ -1,0 +1,115 @@
+{
+	"name": "ICEPipeLine",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						},
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Date Created": "DateCreated",
+							"Date Modified": "DateModified",
+							"Record ID#": "RecordID",
+							"Classification Society": "ClassificationSociety",
+							"1SS (or Equivalent)": "1SSorEquivalent",
+							"1C (or Equivalent)": "1CorEquivalent",
+							"1B (or Equivalent)": "1BorEquivalent",
+							"1A (or Equivalent)": "1AorEquivalent",
+							"1D (or Equivalent)": "1DorEquivalent"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ICEQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": "@pipeline().parameters.sourceTable"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ICESQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "@pipeline().parameters.targetTable"
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bmx7uskkg"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "staging.ICE"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncICE"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-10-04T17:22:06Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

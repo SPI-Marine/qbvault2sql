@@ -1,0 +1,25 @@
+{
+	"name": "VesselItineraryTrigger",
+	"properties": {
+		"description": "Daily trigger to load VesselItinerary table from QB",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "VesselItineraryPipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-08-16T20:51:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

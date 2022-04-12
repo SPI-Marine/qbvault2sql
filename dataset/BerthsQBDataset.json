@@ -1,0 +1,91 @@
+{
+	"name": "BerthsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bk2txxzex"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "Int32"
+			},
+			{
+				"name": "Berth Name",
+				"type": "String"
+			},
+			{
+				"name": "Related Port ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Draft Restriction",
+				"type": "Decimal"
+			},
+			{
+				"name": "LOA Restriction",
+				"type": "Decimal"
+			},
+			{
+				"name": "Product Restriction",
+				"type": "String"
+			},
+			{
+				"name": "Ex-names",
+				"type": "String"
+			},
+			{
+				"name": "Unique_ID",
+				"type": "String"
+			},
+			{
+				"name": "Upriver Ports",
+				"type": "String"
+			},
+			{
+				"name": "Related Terminal ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Port Area Manager Users (P)",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.6.7.10.11.12.33.34.49.53.57</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

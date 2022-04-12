@@ -1,0 +1,70 @@
+{
+	"name": "CommodityPricesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.TradeFlows"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "AssessmentType",
+				"type": "String"
+			},
+			{
+				"name": "ReportDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "PriceHigh",
+				"type": "Decimal"
+			},
+			{
+				"name": "PriceLow",
+				"type": "Decimal"
+			},
+			{
+				"name": "PriceAverage",
+				"type": "Decimal"
+			},
+			{
+				"name": "Unit",
+				"type": "String"
+			},
+			{
+				"name": "Remarks",
+				"type": "String"
+			},
+			{
+				"name": "RelatedLocationID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedDataSourceID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedProductID",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

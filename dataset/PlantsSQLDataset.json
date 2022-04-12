@@ -1,0 +1,78 @@
+{
+	"name": "PlantsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.Plants"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "PlantName",
+				"type": "String"
+			},
+			{
+				"name": "Capacity",
+				"type": "Decimal"
+			},
+			{
+				"name": "Unit",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "Contractor",
+				"type": "String"
+			},
+			{
+				"name": "LocalRegion",
+				"type": "String"
+			},
+			{
+				"name": "PlantLocation",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "ShutdownDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "ReOpenDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "RelatedCountryID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedProductsID",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

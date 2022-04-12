@@ -1,0 +1,32 @@
+{
+	"name": "ChartererParentsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ChartererParentsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bkt3vg9i3",
+					"targetTable": "staging.ChartererParents",
+					"logTable": "etl.ChartererParentsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncChartererParents",
+					"updateLogStoredProc": "etl.cp_updateLogChartererParentsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 12,
+				"startTime": "2019-04-02T12:05:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

@@ -1,0 +1,174 @@
+{
+	"name": "ParcelsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Parcels"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QbRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "BillLadingDate",
+				"type": "String"
+			},
+			{
+				"name": "DateModified",
+				"type": "String"
+			},
+			{
+				"name": "DateCreated",
+				"type": "String"
+			},
+			{
+				"name": "OutTurnQty",
+				"type": "String"
+			},
+			{
+				"name": "ShipLoadedQty",
+				"type": "String"
+			},
+			{
+				"name": "ShipDischargeQty",
+				"type": "String"
+			},
+			{
+				"name": "NominatedQty",
+				"type": "String"
+			},
+			{
+				"name": "BLQty",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "PaymentType",
+				"type": "String"
+			},
+			{
+				"name": "Unit",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSpiFixtureId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedLoadPortID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedLoadBerth",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedDischPortId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedMarketInfoId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedLiftingNominationId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedDischBerth",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedParcelProductId",
+				"type": "Int32"
+			},
+			{
+				"name": "ParcelFreightAmountQBC",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageVaultEstimateAmount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageAgreedPro-ration_QBC",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageAgreedAmount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageClaimAmount_QBC",
+				"type": "String"
+			},
+			{
+				"name": "DeadfreightQty",
+				"type": "String"
+			},
+			{
+				"name": "ParcelNumber",
+				"type": "Byte"
+			},
+			{
+				"name": "ParcelFrtRate",
+				"type": "String"
+			},
+			{
+				"name": "SupplierName",
+				"type": "String"
+			},
+			{
+				"name": "ReceiverName",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "TentativeCargoNomQty",
+				"type": "String"
+			},
+			{
+				"name": "TentativeCargoNomDateOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "ChartererRequest_LaycanCommencementOriginal",
+				"type": "String"
+			},
+			{
+				"name": "ChartererRequest_LaycanCancellingOriginal",
+				"type": "String"
+			},
+			{
+				"name": "ChartererRequestedQuantity",
+				"type": "String"
+			},
+			{
+				"name": "HypotheticalFrtRate",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

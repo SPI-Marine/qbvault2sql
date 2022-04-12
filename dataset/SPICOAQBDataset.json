@@ -1,0 +1,175 @@
+{
+	"name": "SPICOAQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bmqbct5bf"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Address Commission",
+				"type": "String"
+			},
+			{
+				"name": "Broker Commission",
+				"type": "String"
+			},
+			{
+				"name": "Status_OLD",
+				"type": "String"
+			},
+			{
+				"name": "P&C",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Full Style ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Charterer Full Style ID",
+				"type": "String"
+			},
+			{
+				"name": "SPI COA Date",
+				"type": "String"
+			},
+			{
+				"name": "Addendum Date",
+				"type": "String"
+			},
+			{
+				"name": "Addendum Expiry Date",
+				"type": "String"
+			},
+			{
+				"name": "Addendum Commencement Date",
+				"type": "String"
+			},
+			{
+				"name": "Renewal Date (Declare by)",
+				"type": "String"
+			},
+			{
+				"name": "Contract Commencement",
+				"type": "String"
+			},
+			{
+				"name": "Contract Cancelling",
+				"type": "String"
+			},
+			{
+				"name": "COA Title_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI Region ID (TM)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Status Formula_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Renewal Status",
+				"type": "String"
+			},
+			{
+				"name": "Contract Name Type",
+				"type": "String"
+			},
+			{
+				"name": "COA or Service Agreement",
+				"type": "String"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
+			},
+			{
+				"name": "Ops PIC Full Name (TM)",
+				"type": "String"
+			},
+			{
+				"name": "SPI Office",
+				"type": "String"
+			},
+			{
+				"name": "CP Form",
+				"type": "String"
+			},
+			{
+				"name": "Freight Basis_Entry",
+				"type": "String"
+			},
+			{
+				"name": "Period",
+				"type": "String"
+			},
+			{
+				"name": "Mos/Years",
+				"type": "String"
+			},
+			{
+				"name": "Option",
+				"type": "String"
+			},
+			{
+				"name": "Terms for Optional Period (Asia)",
+				"type": "String"
+			},
+			{
+				"name": "Demurrage Time Bar",
+				"type": "String"
+			},
+			{
+				"name": "Dem Outcome 1",
+				"type": "String"
+			},
+			{
+				"name": "Demurrage COA Notes",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.14.15.75.145.155.152.6.43.79.78.20.10.11.273.387.394.243.109.77.105.107.271.250.295.40.386.19.110.17.254.134</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

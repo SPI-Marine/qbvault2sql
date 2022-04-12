@@ -1,0 +1,123 @@
+{
+	"name": "PositionsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bipwpi4u3"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Date Created",
+				"type": "String"
+			},
+			{
+				"name": "Date Modified",
+				"type": "String"
+			},
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Record Owner",
+				"type": "String"
+			},
+			{
+				"name": "Last Modified By",
+				"type": "String"
+			},
+			{
+				"name": "Date Open",
+				"type": "String"
+			},
+			{
+				"name": "End Date",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Status Calculation_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Related Vessel ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Port ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Shipping Areas ID (P)",
+				"type": "String"
+			},
+			{
+				"name": "Related Product ID",
+				"type": "String"
+			},
+			{
+				"name": "Last Cargo",
+				"type": "String"
+			},
+			{
+				"name": "FOSFA (Prod)",
+				"type": "String"
+			},
+			{
+				"name": "Position Type",
+				"type": "String"
+			},
+			{
+				"name": "Related Position Direction ID",
+				"type": "String"
+			},
+			{
+				"name": "Direction",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Parent ID (V)",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>1.2.3.4.5.6.7.8.9.10.64.67.91.92.93.181.187.190.207</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "qbvault2sql",
+	"location": "EastUS",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6f37fbca-7e56-480f-af1e-6592f9d37aba",
+		"tenantId": "cac8c10c-4aa9-43d0-bd13-2a291864ccf0"
+	}
+}

@@ -1,0 +1,109 @@
+{
+	"name": "IHSCountryPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"QBRecId": "QBRecId",
+							"CountryName": "CountryName",
+							"RelatedCommodityRegionID": "RelatedCommodityRegionID"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "IHSCountryQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": "@pipeline().parameters.sourceTable",
+							"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "IHSCountrySQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "Staging.Country"
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bmptx8x2q"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "Staging.IHSCountry"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncIHSCountry"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-07T18:35:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

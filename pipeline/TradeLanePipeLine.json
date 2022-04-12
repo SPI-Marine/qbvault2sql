@@ -1,0 +1,126 @@
+{
+	"name": "TradeLanePipeLine",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Record ID#": "RecordID",
+							"Tradelane # Liftings Min_Entry": "TradelaneNumLiftingsMin_Entry",
+							"Trade Lane # Liftings Max_Entry": "TradelaneNumLiftingsMax_Entry",
+							"Trade Lane Lifting Qty Min_Entry": "TradeLaneLiftingQtyMin_Entry",
+							"Trade Lane Lifting Qty Max_Entry": "TradeLaneLiftingQtyMax_Entry",
+							"Load Option": "LoadOption",
+							"Freight Details": "FreightDetails",
+							"Lifting Requirement Options": "LiftingRequirementOptions",
+							"Related SPI COA ID": "RelatedSPICOAID",
+							"Trade Lane Title": "TradeLaneTitle"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "TradeLaneQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": "@pipeline().parameters.sourceTable",
+							"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "TradeLaneSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "@pipeline().parameters.targetTable"
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bpvrvqrsn"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "staging.TradeLane"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncTradeLane"
+			}
+		},
+		"variables": {
+			"startTimeStamp": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			},
+			"varLastLoadedDate": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-07-15T16:35:11Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,154 @@
+{
+	"name": "SPICOASQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.SPICOA"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "AddressCommission",
+				"type": "String"
+			},
+			{
+				"name": "BrokerCommission",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "P&C",
+				"type": "String"
+			},
+			{
+				"name": "RelatedOwnerFullStyleID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedChartererFullStyleID",
+				"type": "Int32"
+			},
+			{
+				"name": "SPICOADate",
+				"type": "Date"
+			},
+			{
+				"name": "AddendumDate",
+				"type": "Date"
+			},
+			{
+				"name": "AddendumExpiryDate",
+				"type": "Date"
+			},
+			{
+				"name": "AddendumCommencementDate",
+				"type": "Date"
+			},
+			{
+				"name": "RenewalDate_DeclareBy",
+				"type": "Date"
+			},
+			{
+				"name": "ContractCommencement",
+				"type": "Date"
+			},
+			{
+				"name": "ContractCancelling",
+				"type": "Date"
+			},
+			{
+				"name": "COA_Title_Admin",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPIRegionID_ADMIN",
+				"type": "Int32"
+			},
+			{
+				"name": "StatusFormula_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "RenewalStatus",
+				"type": "String"
+			},
+			{
+				"name": "ContractNameType",
+				"type": "String"
+			},
+			{
+				"name": "COAorServiceAgreement",
+				"type": "String"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
+			},
+			{
+				"name": "OpsPICFullNameTM",
+				"type": "String"
+			},
+			{
+				"name": "SPIOffice",
+				"type": "String"
+			},
+			{
+				"name": "CPForm",
+				"type": "String"
+			},
+			{
+				"name": "FreightBasis_Entry",
+				"type": "String"
+			},
+			{
+				"name": "Period",
+				"type": "String"
+			},
+			{
+				"name": "Mos_Years",
+				"type": "String"
+			},
+			{
+				"name": "Option",
+				"type": "String"
+			},
+			{
+				"name": "TermsforOptionalPeriodAsia",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageTimeBar",
+				"type": "String"
+			},
+			{
+				"name": "DemOutcome1",
+				"type": "String"
+			},
+			{
+				"name": "DemurrageCOANotes",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

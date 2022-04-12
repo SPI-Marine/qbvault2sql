@@ -1,0 +1,62 @@
+{
+	"name": "ParcelProductsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.ParcelProducts"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "NominatedQtyMax",
+				"type": "Decimal"
+			},
+			{
+				"name": "NominatedQtyMin",
+				"type": "Decimal"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			},
+			{
+				"name": "RelatedProductId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedCOANominationId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedMarketInfoId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPIFixtureId",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPICOAProductsId",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

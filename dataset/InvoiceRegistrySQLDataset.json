@@ -1,0 +1,114 @@
+{
+	"name": "InvoiceRegistrySQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.InvoiceRegistry"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "InvoiceNumberOfficial_INVOICE",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceTo_INVOICE",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceTypeDetailed_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceAmountSnapShot_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceDateINVOICE",
+				"type": "DateTime"
+			},
+			{
+				"name": "InvoiceStatus_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "DatePaymentReceived",
+				"type": "DateTime"
+			},
+			{
+				"name": "RelatedSPIFixtureID",
+				"type": "Int32"
+			},
+			{
+				"name": "VesselFormula_INVOICE",
+				"type": "String"
+			},
+			{
+				"name": "OfficeFormula_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "BrokerFormula_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "ChartererFormula_INVOICE",
+				"type": "String"
+			},
+			{
+				"name": "OwnerFormula_INVOICE",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceGeneratedBy_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceDueDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "RelatedSPITimeChartererID",
+				"type": "Int32"
+			},
+			{
+				"name": "CreditAppliedAgainstInvoiceNumber",
+				"type": "String"
+			},
+			{
+				"name": "Currency_INVOICE",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceTypeSubCategory_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "SPIRegion",
+				"type": "String"
+			},
+			{
+				"name": "InvoiceTypeCategory_ADMIN",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,32 @@
+{
+	"name": "OwnerParentsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "OwnerParentsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bkt3wk8uh",
+					"targetTable": "staging.OwnerParents",
+					"logTable": "etl.OwnerParentsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncOwnerParents",
+					"updateLogStoredProc": "etl.cp_updateLogOwnerParentsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 12,
+				"startTime": "2019-04-02T12:12:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

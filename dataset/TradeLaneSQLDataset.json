@@ -1,0 +1,66 @@
+{
+	"name": "TradeLaneSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.TradeLane"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "TradelaneNumLiftingsMin_Entry",
+				"type": "String"
+			},
+			{
+				"name": "TradelaneNumLiftingsMax_Entry",
+				"type": "String"
+			},
+			{
+				"name": "TradeLaneLiftingQtyMin_Entry",
+				"type": "String"
+			},
+			{
+				"name": "TradeLaneLiftingQtyMax_Entry",
+				"type": "String"
+			},
+			{
+				"name": "LoadOption",
+				"type": "String"
+			},
+			{
+				"name": "FreightDetails",
+				"type": "String"
+			},
+			{
+				"name": "LiftingRequirementOptions",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPICOAID",
+				"type": "Int32"
+			},
+			{
+				"name": "TradeLaneTitle",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,58 @@
+{
+	"name": "VesselPricesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.VesselPrices"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "AssessmentDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "Age",
+				"type": "String"
+			},
+			{
+				"name": "Deadweight",
+				"type": "String"
+			},
+			{
+				"name": "IMOType",
+				"type": "String"
+			},
+			{
+				"name": "PricesUSD",
+				"type": "Decimal"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "RelatedCoatingCategoryID",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,43 @@
+{
+	"name": "SpiOfficesTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SpiOfficesPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bm8s7vw85",
+					"targetTable": "staging.SpiOffices",
+					"logTable": "etl.SpiOfficesLoadInfo",
+					"syncStoredProc": "dbo.cp_syncSpiOffices",
+					"updateLogStoredProc": "etl.cp_updateLogSpiOfficesLoadInfo",
+					"IsFullLoad": 0
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 6,
+				"startTime": "2019-04-02T12:18:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						59
+					],
+					"hours": [
+						23
+					],
+					"monthDays": [
+						1
+					]
+				}
+			}
+		}
+	}
+}

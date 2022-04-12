@@ -1,0 +1,78 @@
+{
+	"name": "SOFEventsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.SOFEvents"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "String"
+			},
+			{
+				"name": "Laytime",
+				"type": "String"
+			},
+			{
+				"name": "PumpingTime",
+				"type": "String"
+			},
+			{
+				"name": "StartDate",
+				"type": "String"
+			},
+			{
+				"name": "StopDate",
+				"type": "String"
+			},
+			{
+				"name": "StopTime",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "StartTime",
+				"type": "String"
+			},
+			{
+				"name": "LaytimeProationType",
+				"type": "String"
+			},
+			{
+				"name": "RelatedPortTimeEventId",
+				"type": "Int32"
+			},
+			{
+				"name": "LtUsedProrationAmtHrs_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "RelatedParcelBerthId",
+				"type": "Int32"
+			},
+			{
+				"name": "DateModified",
+				"type": "Date"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

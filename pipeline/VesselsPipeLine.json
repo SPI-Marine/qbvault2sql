@@ -1,0 +1,304 @@
+{
+	"name": "VesselsPipeLine",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTLookupLastLoaded",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlGenericDataset",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ACTSetLastLoadedDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Record ID#": "QBRecId",
+							"Vessel Name": "VesselName",
+							"Draft (M)": "Draft",
+							"Year Built": "YearBuilt",
+							"Coils": "Coils",
+							"Deadweight": "DeadWeight",
+							"Beam": "Beam",
+							"LOA": "LOA",
+							"Related Owner Parent ID": "RelatedOwnerParentId",
+							"Yard": "Yard",
+							"Ice Entry": "IceEntry",
+							"Registered Owner": "RegisteredOwner",
+							"Clean or Dirty": "CleanDirty",
+							"TC Candidate": "TcCandidate",
+							"IMO  Type": "IMOType",
+							"Tanks": "Tanks",
+							"Pumps": "Pumps",
+							"Segs": "Segs",
+							"CBM": "CBM",
+							"Hull": "Hull",
+							"Ex-Name": "ExName",
+							"Comments": "Comments",
+							"Trade": "Trade",
+							"Country of Build": "CountryOfBuild",
+							"Flag": "Flag",
+							"Data Source": "DataSource",
+							"Commercial_Owner_Operator": "CommercialOwnerOperator",
+							"Related Sale and Purchase ID": "RelatedSaleId",
+							"Archived Vsl": "ArchivedVsl",
+							"Reason for Archive": "ReasonForArchive",
+							"IGS Type": "IGSType",
+							"Status": "Status",
+							"Related Ice Class ID": "RelatedIceClassId",
+							"IMO Certificate Removed": "IMOCertificateRemoved",
+							"KTR Number (Unique)": "KTRNumber",
+							"STST (CBM)": "STSTCBM",
+							"Marine Line (CBM)": "MarineLineCBM",
+							"Interline (CBM)": "InterlineCBM",
+							"Epoxy (CBM)": "EpoxyCBM",
+							"Zinc (CBM)": "ZincCBM",
+							"IMO 1 (CBM)_OLD": "IMO1CBM",
+							"IMO 2 (CBM)": "IMO2CBM",
+							"IMO 3 (CBM)": "IMO3CBM",
+							"YdNo": "YdNo",
+							"NB Contract Date_KTR": "NBContractDate",
+							"Retired Date": "RetiredDate",
+							"KTR Change Date": "KTRChangeDate",
+							"Delivery Date": "DeliveryDate",
+							"Vessel Type": "VesselType",
+							"Related Tank Coating ID": "RelatedCoatingId",
+							"IMO Number": "IMONumber"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "VesselsQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"StartDate_WhereClause": {
+								"value": "@variables('varLastLoadedDate')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "VesselsSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": "staging.Vessels"
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetStartTimeStamp",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "startTimeStamp",
+					"value": {
+						"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ACTUpdateLog",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTSyncDestination",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ACTSetStartTimeStamp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.updateLogStoredProc",
+						"type": "Expression"
+					},
+					"storedProcedureParameters": {
+						"LastProcessed": {
+							"value": {
+								"value": "@variables('startTimeStamp')",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ACTSetLastLoadedDate",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ACTLookupLastLoaded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "varLastLoadedDate",
+					"value": {
+						"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "binf7kupm"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "staging.Vessels"
+			},
+			"logTable": {
+				"type": "String",
+				"defaultValue": "etl.VesselsLoadInfo"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncVessels"
+			},
+			"updateLogStoredProc": {
+				"type": "String",
+				"defaultValue": "etl.cp_updateLogVesselsLoadInfo"
+			},
+			"IsFullLoad": {
+				"type": "int",
+				"defaultValue": 1
+			}
+		},
+		"variables": {
+			"startTimeStamp": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			},
+			"varLastLoadedDate": {
+				"type": "String",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-09-15T19:32:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

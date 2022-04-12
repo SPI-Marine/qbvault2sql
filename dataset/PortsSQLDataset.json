@@ -1,0 +1,78 @@
+{
+	"name": "PortsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Ports"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "PortName",
+				"type": "String"
+			},
+			{
+				"name": "RelatedShippingAreaId",
+				"type": "Int32"
+			},
+			{
+				"name": "Country",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Latitude",
+				"type": "String"
+			},
+			{
+				"name": "Longitude",
+				"type": "String"
+			},
+			{
+				"name": "PortCosts",
+				"type": "String"
+			},
+			{
+				"name": "Address",
+				"type": "String"
+			},
+			{
+				"name": "RelatedCountryId",
+				"type": "Int32"
+			},
+			{
+				"name": "LOARestriction",
+				"type": "String"
+			},
+			{
+				"name": "DraftRestriction",
+				"type": "String"
+			},
+			{
+				"name": "ProductRestriction",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,99 @@
+{
+	"name": "SOFEventsQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bmecd9c5n"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Applied",
+				"type": "String"
+			},
+			{
+				"name": "Pumping Time",
+				"type": "String"
+			},
+			{
+				"name": "Start Date",
+				"type": "String"
+			},
+			{
+				"name": "Stop Date",
+				"type": "String"
+			},
+			{
+				"name": "Stop Time",
+				"type": "String"
+			},
+			{
+				"name": "Comments",
+				"type": "String"
+			},
+			{
+				"name": "Start Time",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Proration Type",
+				"type": "String"
+			},
+			{
+				"name": "Related Port Time Event ID",
+				"type": "Int32"
+			},
+			{
+				"name": "LT Used Proration Amount hrs_QBC",
+				"type": "Decimal"
+			},
+			{
+				"name": "Related Parcel Berth ID",
+				"type": "Int32"
+			},
+			{
+				"name": "DateModified",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi> <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.221.222.223.225.226.228.257.334.417.335.308.2</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,391 @@
+{
+	"name": "PostFixturesQBDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QBHttpLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"QBTableName": {
+				"type": "string",
+				"defaultValue": "bmd6t28k5"
+			},
+			"StartDate_WhereClause": {
+				"type": "string",
+				"defaultValue": "1900-01-01"
+			}
+		},
+		"annotations": [],
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Related Vessel ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Full Style ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Charterer Full Style ID",
+				"type": "String"
+			},
+			{
+				"name": "Broker PIC Email (TM)",
+				"type": "String"
+			},
+			{
+				"name": "Ops PIC Email (TM)",
+				"type": "String"
+			},
+			{
+				"name": "Ops Backup Email (TM)",
+				"type": "String"
+			},
+			{
+				"name": "Related Nomination ID",
+				"type": "String"
+			},
+			{
+				"name": "CP Date",
+				"type": "String"
+			},
+			{
+				"name": "CP Form",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Cancel Original_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Demurrage Rate Per Day_ENTRY",
+				"type": "String"
+			},
+			{
+				"name": "Time Bar",
+				"type": "String"
+			},
+			{
+				"name": "Address Commission Percentage_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Broker Commission Percentage for Comm Inv_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed Fixture Load_ENTRY_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Reversible_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Originally Fixed As_SNAP_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Demurrage Amount Agreed_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Charter To Be Invoiced Commission_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Payment Type",
+				"type": "String"
+			},
+			{
+				"name": "Freight Lump Sum_Data Entry_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch FAC_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed Type Fixture_ENTRY",
+				"type": "String"
+			},
+			{
+				"name": "Owners Ref_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Charterers Ref_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Exchange Rate_1 USD Equals_review",
+				"type": "String"
+			},
+			{
+				"name": "Currency Invoice_OLD",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Commencement_Narrowed",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Cancelling_Narrowed",
+				"type": "String"
+			},
+			{
+				"name": "Chartering PIC_Snap",
+				"type": "String"
+			},
+			{
+				"name": "Operations PIC_Snap",
+				"type": "String"
+			},
+			{
+				"name": "Laycan to be Narrowed by",
+				"type": "String"
+			},
+			{
+				"name": "Broker Comm applies to Demurrage_CB",
+				"type": "String"
+			},
+			{
+				"name": "Broker Comm applies to Deadfreight_CB",
+				"type": "String"
+			},
+			{
+				"name": "Demurrage Claim Received Date",
+				"type": "String"
+			},
+			{
+				"name": "Voyage Number_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laycan to be Amended",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Cancelling_Amended",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Commencement_Amended",
+				"type": "String"
+			},
+			{
+				"name": "Currency CP_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Status Category_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Frt Rate PMT (bss PMT or Lump Sum)",
+				"type": "String"
+			},
+			{
+				"name": "Broker Frt Commission excluding Addl Charges_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "SPI Fixture #",
+				"type": "String"
+			},
+			{
+				"name": "Vessel Fixed As_Official",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI COA ID",
+				"type": "String"
+			},
+			{
+				"name": "Date Created",
+				"type": "String"
+			},
+			{
+				"name": "Date Modified",
+				"type": "String"
+			},
+			{
+				"name": "Load Port 1 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Load Port 2 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Load Port 3 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 1 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 2 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 3 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 4 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 5 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 6 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port 7 Record ID (LDP)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Commencement  Original_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Add Comm applies to Deadfreight_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed Fixture Disch mtph_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed Fixture Load mtph_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed FIXTURE Total hrs _sum",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed Type Fixture_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Add Comm applies to Demurrage_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Add Comm applies to Frt_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Zero Demurrage",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Cancelling Final_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Commencement Final_QBC",
+				"type": "String"
+			},
+			{
+				"name": "Status Detailed_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Fixture Type",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Allowed Fixture Disch_ENTRY_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Portal Customer Alert_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Commencement Time_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Laycan Cancelling Time_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI Office ID",
+				"type": "String"
+			},
+			{
+				"name": "Laytime Based On_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "SPI Initial Demurrage Estimate",
+				"type": "String"
+			},
+			{
+				"name": "Load Port Region (P)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Disch Port Region (P)_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Frt Rate Projection_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Voyage Summary Report Comments_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Extra Laytime for Fixture_Entry_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "Related SPI COA Trade Lane ID",
+				"type": "String"
+			},
+			{
+				"name": "Port Time Rate_ENTRY",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"relativeUrl": {
+				"value": "@dataset().QBTableName",
+				"type": "Expression"
+			},
+			"requestMethod": "POST",
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+			"requestBody": {
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.302.1308.901.25.511.1035.1341.8.13.41.42.43.44.45.47.179.381.391.470.497.498.522.523.613.614.691.690.785.786.792.793.818.956.955.1016.1140.1262.1261.1260.1312.39.502.504.795.865.524.1.2.434.435.439.440.449.450.451.452.453.454.40.952.1269.541.1647.1619.1055.1056.1318.1160.1159.721.7.48.1868.1900.1901.1766.941.1888.1907.1908.928.1807.1559.1927.1552</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

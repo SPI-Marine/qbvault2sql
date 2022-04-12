@@ -1,0 +1,32 @@
+{
+	"name": "ParcelProductsTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ParcelProductsPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bntybms7q",
+					"targetTable": "staging.ParcelProducts",
+					"logTable": "etl.ParcelProductsLoadInfo",
+					"syncStoredProc": "dbo.cp_syncParcelProducts",
+					"updateLogStoredProc": "etl.cp_updateLogParcelProductsLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-04-02T12:13:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

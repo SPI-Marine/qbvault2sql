@@ -1,0 +1,40 @@
+{
+	"name": "ShippingAreasTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ShippingAreasPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "binf7kuq6",
+					"targetTable": "staging.ShippingAreas",
+					"logTable": "etl.ShippingAreasLoadInfo",
+					"syncStoredProc": "dbo.cp_syncShippingAreas",
+					"updateLogStoredProc": "etl.cp_updateLogShippingAreasLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-04-02T12:16:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						59
+					],
+					"hours": [
+						23
+					]
+				}
+			}
+		}
+	}
+}

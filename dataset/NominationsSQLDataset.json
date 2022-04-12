@@ -1,0 +1,102 @@
+{
+	"name": "NominationsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.Nominations"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedVesselID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPI_COA_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPIFixtureID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedSPI_COATradeLane",
+				"type": "Int32"
+			},
+			{
+				"name": "TentCargoNom_OriginalQty",
+				"type": "String"
+			},
+			{
+				"name": "VesselNom_LaycanCommencementOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "VesselNom_LaycanCancellingOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "FirmCargoNom_Qty",
+				"type": "String"
+			},
+			{
+				"name": "ChartererRequest_LaycanCommencementOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "ChartererRequest_LaycanCancellingOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "DateOwnersSentScheduleofAvailableVesselstoCharterers",
+				"type": "Date"
+			},
+			{
+				"name": "1stMondayoftheMonth",
+				"type": "Date"
+			},
+			{
+				"name": "CargoNominationbyParcel",
+				"type": "String"
+			},
+			{
+				"name": "ChartererRequestedQty",
+				"type": "String"
+			},
+			{
+				"name": "VesselCapacity",
+				"type": "String"
+			},
+			{
+				"name": "TentCargoNomDateOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "VesselNom_DateOriginal",
+				"type": "Date"
+			},
+			{
+				"name": "ConfirmationDate",
+				"type": "Date"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

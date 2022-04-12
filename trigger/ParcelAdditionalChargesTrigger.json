@@ -1,0 +1,32 @@
+{
+	"name": "ParcelAdditionalChargesTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ParcelAdditionalChargesPipeLine",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"sourceTable": "bnu6iup95",
+					"targetTable": "staging.ParcelAdditionalCharges",
+					"logTable": "etl.ParcelAdditionalChargesLoadInfo",
+					"syncStoredProc": "dbo.cp_syncParcelAdditionalCharges",
+					"updateLogStoredProc": "etl.cp_updateLogParcelAdditionalChargesLoadInfo",
+					"IsFullLoad": 1
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2019-04-02T12:12:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

@@ -1,0 +1,62 @@
+{
+	"name": "ICESQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.ICE"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "DateCreated",
+				"type": "DateTime"
+			},
+			{
+				"name": "DateModified",
+				"type": "DateTime"
+			},
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "ClassificationSociety",
+				"type": "String"
+			},
+			{
+				"name": "1SSorEquivalent",
+				"type": "String"
+			},
+			{
+				"name": "1CorEquivalent",
+				"type": "String"
+			},
+			{
+				"name": "1BorEquivalent",
+				"type": "String"
+			},
+			{
+				"name": "1AorEquivalent",
+				"type": "String"
+			},
+			{
+				"name": "1DorEquivalent",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

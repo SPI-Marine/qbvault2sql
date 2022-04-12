@@ -1,0 +1,78 @@
+{
+	"name": "AdditionalChargesSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.AdditionalCharges"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "QBRecId",
+				"type": "Int32"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "CostTowardCommission",
+				"type": "String"
+			},
+			{
+				"name": "Amount",
+				"type": "Decimal"
+			},
+			{
+				"name": "Planned",
+				"type": "String"
+			},
+			{
+				"name": "RelatedSPIFixtureId",
+				"type": "Int32"
+			},
+			{
+				"name": "BunkerQty",
+				"type": "Decimal"
+			},
+			{
+				"name": "BunkerPrice",
+				"type": "Decimal"
+			},
+			{
+				"name": "RelatedAdditionalChargeType",
+				"type": "Int32"
+			},
+			{
+				"name": "Apply_Address_Commission_ADMIN",
+				"type": "String"
+			},
+			{
+				"name": "DoNotIncludeInAdditionalChargeCalculation",
+				"type": "String"
+			},
+			{
+				"name": "ProrationType",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
