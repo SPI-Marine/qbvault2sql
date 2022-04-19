@@ -9,10 +9,6 @@
 			"QBTableName": {
 				"type": "string",
 				"defaultValue": "bmptx8x2q"
-			},
-			"StartDate_WhereClause": {
-				"type": "string",
-				"defaultValue": "1900-01-01"
 			}
 		},
 		"annotations": [],
