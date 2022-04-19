@@ -51,7 +51,10 @@
 						"referenceName": "IHSCountrySQLDataset",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableName": "Staging.Country"
+							"tableName": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							}
 						}
 					}
 				]
