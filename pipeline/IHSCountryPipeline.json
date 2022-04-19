@@ -42,8 +42,7 @@
 						"referenceName": "IHSCountryQBDataset",
 						"type": "DatasetReference",
 						"parameters": {
-							"QBTableName": "@pipeline().parameters.sourceTable",
-							"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+							"QBTableName": "@pipeline().parameters.sourceTable"
 						}
 					}
 				],
