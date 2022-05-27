@@ -1,0 +1,1293 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		},
+		"AzureSqlDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDBLinkedService'"
+		},
+		"QBHttpLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://spimarine.quickbase.com/db/"
+		},
+		"spiqb_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://spimarine.quickbase.com/db/"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bn95a4fez"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.AdditionalChargeType"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.AdditionalChargeTypeLoadInfo"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncAdditionalChargeType"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogAdditionalChargeTypeLoadInfo"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk2txxzex"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Berths"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.BerthsLoadInfo"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncBerths"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogBerthsLoadInfo"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkt3vg9i3"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ChartererParents"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ChartererParentsLoadInfo"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncChartererParents"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogChartererParentsLoadInfo"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bnnwtpnzv"
+		},
+		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.CoatingCategories"
+		},
+		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.CoatingCategoriesLoadInfo"
+		},
+		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncCoatingCategories"
+		},
+		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogCoatingCategoriesLoadInfo"
+		},
+		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk2hjzw9p"
+		},
+		"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.FreightRates"
+		},
+		"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.FreightRatesLoadInfo"
+		},
+		"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncFreightRates"
+		},
+		"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogFreightRatesLoadInfo"
+		},
+		"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"FullStylesTrigger_properties_FullStylesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkwv42zaf"
+		},
+		"FullStylesTrigger_properties_FullStylesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.FullStyles"
+		},
+		"FullStylesTrigger_properties_FullStylesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.FullStylesLoadInfo"
+		},
+		"FullStylesTrigger_properties_FullStylesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncFullStyles"
+		},
+		"FullStylesTrigger_properties_FullStylesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogFullStylesLoadInfo"
+		},
+		"FullStylesTrigger_properties_FullStylesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkt3wk8uh"
+		},
+		"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.OwnerParents"
+		},
+		"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.OwnerParentsLoadInfo"
+		},
+		"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncOwnerParents"
+		},
+		"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogOwnerParentsLoadInfo"
+		},
+		"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bnu6iup95"
+		},
+		"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ParcelAdditionalCharges"
+		},
+		"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ParcelAdditionalChargesLoadInfo"
+		},
+		"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncParcelAdditionalCharges"
+		},
+		"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogParcelAdditionalChargesLoadInfo"
+		},
+		"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bm3raeq5e"
+		},
+		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ParcelBerths"
+		},
+		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ParcelBerthsLoadInfo"
+		},
+		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncParcelBerths"
+		},
+		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogParcelBerthsLoadInfo"
+		},
+		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmf5abifq"
+		},
+		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ParcelPorts"
+		},
+		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ParcelPortsLoadInfo"
+		},
+		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncParcelPorts"
+		},
+		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogParcelPortsLoadInfo"
+		},
+		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bntybms7q"
+		},
+		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ParcelProducts"
+		},
+		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ParcelProductsLoadInfo"
+		},
+		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncParcelProducts"
+		},
+		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogParcelProductsLoadInfo"
+		},
+		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmetvurzg"
+		},
+		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Parcels"
+		},
+		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ParcelsLoadInfo"
+		},
+		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncParcels"
+		},
+		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogParcelsLoadInfo"
+		},
+		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmffryf7t"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.PortEventTimes"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.PortEventTimesLoadInfo"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncPortEventTimes"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogPortEventTimesLoadInfo"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "biunaupmj"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Ports"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.PortsLoadInfo"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncPorts"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogPortsLoadInfo"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmd6t28k5"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.PostFixtures"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.PostFixturesLoadInfo"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncPostFixtures"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bnqjqzj72"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ProductType"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ProductTypeLoadInfo"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncProductType"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogProductTypeLoadInfo"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "biuhrjz6v"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Products"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ProductsLoadInfo"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncProducts"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogProductsLoadInfo"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmqbct5bf"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.SPICOA"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.SPICOALoadInfo"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncSPICOA"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogSPICOALoadInfo"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkwzd5b69"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.SPIRegions"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.SPIRegionsLoadInfo"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncSPIRegions"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogSPIRegionsLoadInfo"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "binf7kuq6"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ShippingAreas"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ShippingAreasLoadInfo"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncShippingAreas"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogShippingAreasLoadInfo"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk78eu5jf"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ShippingRegions"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ShippingRegionsLoadInfo"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncShippingRegions"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogShippingRegionsLoadInfo"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bm8s7vw85"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.SpiOffices"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.SpiOfficesLoadInfo"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncSpiOffices"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogSpiOfficesLoadInfo"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 0
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk2t2skzm"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.TankCoatings"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.TankCoatingsLoadInfo"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncTankCoatings"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogTankCoatingsLoadInfo"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkwzcz4nd"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.TeamMembers"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.TeamMembersLoadInfo"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncTeamMembers"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogTeamMembersLoadInfo"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "binf7kupm"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Vessels"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.VesselsLoadInfo"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncVessels"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogVesselsLoadInfo"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "qbvault2sql_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDBLinkedService_connectionString": {
+						"value": "[parameters('AzureSqlDBLinkedService_connectionString')]"
+					},
+					"QBHttpLinkedService_properties_typeProperties_url": {
+						"value": "[parameters('QBHttpLinkedService_properties_typeProperties_url')]"
+					},
+					"spiqb_properties_typeProperties_url": {
+						"value": "[parameters('spiqb_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_4')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_6",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_6.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_5')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_7",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_7.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable": {
+						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable')]"
+					},
+					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable": {
+						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable')]"
+					},
+					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable": {
+						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable')]"
+					},
+					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc')]"
+					},
+					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc')]"
+					},
+					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad')]"
+					},
+					"BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable')]"
+					},
+					"BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable": {
+						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable')]"
+					},
+					"BerthsTrigger_properties_BerthsPipeLine_parameters_logTable": {
+						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_logTable')]"
+					},
+					"BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc')]"
+					},
+					"BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad')]"
+					},
+					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable')]"
+					},
+					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable')]"
+					},
+					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable": {
+						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable')]"
+					},
+					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_6')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_8",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_8.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_sourceTable')]"
+					},
+					"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_targetTable": {
+						"value": "[parameters('CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_targetTable')]"
+					},
+					"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_logTable": {
+						"value": "[parameters('CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_logTable')]"
+					},
+					"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_syncStoredProc')]"
+					},
+					"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_IsFullLoad')]"
+					},
+					"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_sourceTable')]"
+					},
+					"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_targetTable": {
+						"value": "[parameters('FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_targetTable')]"
+					},
+					"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_logTable": {
+						"value": "[parameters('FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_logTable')]"
+					},
+					"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_syncStoredProc')]"
+					},
+					"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('FreightRatesTrigger_properties_FreightRatesPipeLine_parameters_IsFullLoad')]"
+					},
+					"FullStylesTrigger_properties_FullStylesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('FullStylesTrigger_properties_FullStylesPipeLine_parameters_sourceTable')]"
+					},
+					"FullStylesTrigger_properties_FullStylesPipeLine_parameters_targetTable": {
+						"value": "[parameters('FullStylesTrigger_properties_FullStylesPipeLine_parameters_targetTable')]"
+					},
+					"FullStylesTrigger_properties_FullStylesPipeLine_parameters_logTable": {
+						"value": "[parameters('FullStylesTrigger_properties_FullStylesPipeLine_parameters_logTable')]"
+					},
+					"FullStylesTrigger_properties_FullStylesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('FullStylesTrigger_properties_FullStylesPipeLine_parameters_syncStoredProc')]"
+					},
+					"FullStylesTrigger_properties_FullStylesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('FullStylesTrigger_properties_FullStylesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"FullStylesTrigger_properties_FullStylesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('FullStylesTrigger_properties_FullStylesPipeLine_parameters_IsFullLoad')]"
+					},
+					"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_sourceTable')]"
+					},
+					"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_targetTable": {
+						"value": "[parameters('OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_targetTable')]"
+					},
+					"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_logTable": {
+						"value": "[parameters('OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_logTable')]"
+					},
+					"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_syncStoredProc')]"
+					},
+					"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('OwnerParentsTrigger_properties_OwnerParentsPipeLine_parameters_IsFullLoad')]"
+					},
+					"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_sourceTable')]"
+					},
+					"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_targetTable": {
+						"value": "[parameters('ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_targetTable')]"
+					},
+					"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_logTable": {
+						"value": "[parameters('ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_logTable')]"
+					},
+					"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_syncStoredProc')]"
+					},
+					"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ParcelAdditionalChargesTrigger_properties_ParcelAdditionalChargesPipeLine_parameters_IsFullLoad')]"
+					},
+					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_sourceTable')]"
+					},
+					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_targetTable')]"
+					},
+					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_logTable": {
+						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_logTable')]"
+					},
+					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_IsFullLoad')]"
+					},
+					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable')]"
+					},
+					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_targetTable')]"
+					},
+					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_logTable": {
+						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_logTable')]"
+					},
+					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_IsFullLoad')]"
+					},
+					"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_sourceTable')]"
+					},
+					"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_targetTable')]"
+					},
+					"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_logTable": {
+						"value": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_logTable')]"
+					},
+					"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_IsFullLoad')]"
+					},
+					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_sourceTable')]"
+					},
+					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_targetTable')]"
+					},
+					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_logTable": {
+						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_logTable')]"
+					},
+					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad')]"
+					},
+					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable')]"
+					},
+					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable": {
+						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable')]"
+					},
+					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable": {
+						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable')]"
+					},
+					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc')]"
+					},
+					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_sourceTable')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_targetTable": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_targetTable')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_logTable": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_logTable')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_7')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_9",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_9.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable')]"
+					},
+					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable": {
+						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable')]"
+					},
+					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
+						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable')]"
+					},
+					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]"
+					},
+					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad')]"
+					},
+					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
+						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable')]"
+					},
+					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_targetTable": {
+						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_targetTable')]"
+					},
+					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_logTable": {
+						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_logTable')]"
+					},
+					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_syncStoredProc')]"
+					},
+					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_IsFullLoad')]"
+					},
+					"ProductsTrigger_properties_ProductsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_sourceTable')]"
+					},
+					"ProductsTrigger_properties_ProductsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_targetTable')]"
+					},
+					"ProductsTrigger_properties_ProductsPipeLine_parameters_logTable": {
+						"value": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_logTable')]"
+					},
+					"ProductsTrigger_properties_ProductsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ProductsTrigger_properties_ProductsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ProductsTrigger_properties_ProductsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_IsFullLoad')]"
+					},
+					"SPICOATrigger_properties_SPICOAPipeLine_parameters_sourceTable": {
+						"value": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_sourceTable')]"
+					},
+					"SPICOATrigger_properties_SPICOAPipeLine_parameters_targetTable": {
+						"value": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_targetTable')]"
+					},
+					"SPICOATrigger_properties_SPICOAPipeLine_parameters_logTable": {
+						"value": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_logTable')]"
+					},
+					"SPICOATrigger_properties_SPICOAPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_syncStoredProc')]"
+					},
+					"SPICOATrigger_properties_SPICOAPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"SPICOATrigger_properties_SPICOAPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_IsFullLoad')]"
+					},
+					"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_sourceTable')]"
+					},
+					"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_targetTable": {
+						"value": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_targetTable')]"
+					},
+					"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_logTable": {
+						"value": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_logTable')]"
+					},
+					"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_syncStoredProc')]"
+					},
+					"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_IsFullLoad')]"
+					},
+					"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_sourceTable')]"
+					},
+					"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_targetTable": {
+						"value": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_targetTable')]"
+					},
+					"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_logTable": {
+						"value": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_logTable')]"
+					},
+					"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_syncStoredProc')]"
+					},
+					"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_IsFullLoad')]"
+					},
+					"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_sourceTable')]"
+					},
+					"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_targetTable": {
+						"value": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_targetTable')]"
+					},
+					"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_logTable": {
+						"value": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_logTable')]"
+					},
+					"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_syncStoredProc')]"
+					},
+					"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_IsFullLoad')]"
+					},
+					"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_sourceTable": {
+						"value": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_sourceTable')]"
+					},
+					"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_targetTable": {
+						"value": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_targetTable')]"
+					},
+					"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_logTable": {
+						"value": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_logTable')]"
+					},
+					"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_syncStoredProc')]"
+					},
+					"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_IsFullLoad')]"
+					},
+					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_sourceTable')]"
+					},
+					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_targetTable": {
+						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_targetTable')]"
+					},
+					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_logTable": {
+						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_logTable')]"
+					},
+					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_syncStoredProc')]"
+					},
+					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad')]"
+					},
+					"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable')]"
+					},
+					"VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable": {
+						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable')]"
+					},
+					"VesselsTrigger_properties_VesselsPipeLine_parameters_logTable": {
+						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_logTable')]"
+					},
+					"VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc')]"
+					},
+					"VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_8')]"
+			]
+		}
+	]
+}

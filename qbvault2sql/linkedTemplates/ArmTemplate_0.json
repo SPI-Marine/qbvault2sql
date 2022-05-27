@@ -1,0 +1,1184 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		},
+		"AzureSqlDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDBLinkedService'"
+		},
+		"QBHttpLinkedService_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://spimarine.quickbase.com/db/"
+		},
+		"spiqb_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://spimarine.quickbase.com/db/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDBLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDBLinkedService_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QBHttpLinkedService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('QBHttpLinkedService_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/spiqb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('spiqb_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargeTypeQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bn95a4fez"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Additional Charge Type_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Additional Charge Category",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.6.7</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmm8pdza7"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "Cost to Count Toward Commission",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "Planned",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Bunker Qty",
+						"type": "String"
+					},
+					{
+						"name": "Bunker Price",
+						"type": "String"
+					},
+					{
+						"name": "Related Additional Charge Type ID",
+						"type": "String"
+					},
+					{
+						"name": "Do Not Include In Additional Charge Calculation",
+						"type": "String"
+					},
+					{
+						"name": "Apply Address Commission_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Proration Type",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.6.7.8.9.10.11.207.208.299.312.116.47</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.AdditionalCharges"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "CostTowardCommission",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "Decimal"
+					},
+					{
+						"name": "Planned",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSPIFixtureId",
+						"type": "Int32"
+					},
+					{
+						"name": "BunkerQty",
+						"type": "Decimal"
+					},
+					{
+						"name": "BunkerPrice",
+						"type": "Decimal"
+					},
+					{
+						"name": "RelatedAdditionalChargeType",
+						"type": "Int32"
+					},
+					{
+						"name": "Apply_Address_Commission_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "DoNotIncludeInAdditionalChargeCalculation",
+						"type": "String"
+					},
+					{
+						"name": "ProrationType",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "dummyTableName"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordId",
+						"type": "Int32"
+					},
+					{
+						"name": "ActionInitiatedBy",
+						"type": "String"
+					},
+					{
+						"name": "TriggerEvent",
+						"type": "String"
+					},
+					{
+						"name": "DaysToTriggerEvent",
+						"type": "Int32"
+					},
+					{
+						"name": "Action",
+						"type": "String"
+					},
+					{
+						"name": "COANumber",
+						"type": "String"
+					},
+					{
+						"name": "ActionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PriorOrAfter",
+						"type": "String"
+					},
+					{
+						"name": "DayType",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlGenericDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BerthsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bk2txxzex"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Berth Name",
+						"type": "String"
+					},
+					{
+						"name": "Related Port ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Draft Restriction",
+						"type": "Decimal"
+					},
+					{
+						"name": "LOA Restriction",
+						"type": "Decimal"
+					},
+					{
+						"name": "Product Restriction",
+						"type": "String"
+					},
+					{
+						"name": "Ex-names",
+						"type": "String"
+					},
+					{
+						"name": "Unique_ID",
+						"type": "String"
+					},
+					{
+						"name": "Upriver Ports",
+						"type": "String"
+					},
+					{
+						"name": "Related Terminal ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Port Area Manager Users (P)",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.6.7.10.11.12.33.34.49.53.57</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BerthsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.Berths"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "BerthName",
+						"type": "String"
+					},
+					{
+						"name": "RelatedPortId",
+						"type": "Int32"
+					},
+					{
+						"name": "DraftRestriction",
+						"type": "Decimal"
+					},
+					{
+						"name": "LOARestriction",
+						"type": "Decimal"
+					},
+					{
+						"name": "ProductRestriction",
+						"type": "String"
+					},
+					{
+						"name": "ExNames",
+						"type": "String"
+					},
+					{
+						"name": "UniqueId",
+						"type": "String"
+					},
+					{
+						"name": "UpriverPorts",
+						"type": "String"
+					},
+					{
+						"name": "RelatedTerminalId",
+						"type": "Int32"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BunkerPricesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bkzu2pgtm"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Related Port ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Report Date",
+						"type": "String"
+					},
+					{
+						"name": "IFO 180",
+						"type": "Decimal"
+					},
+					{
+						"name": "�IFO 380",
+						"type": "Decimal"
+					},
+					{
+						"name": "MGO",
+						"type": "Decimal"
+					},
+					{
+						"name": "Date Modified",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.11.28.7.20.8.2</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BunkerPricesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.BunkerPrices"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QbRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedPortId",
+						"type": "Int32"
+					},
+					{
+						"name": "ReportDate",
+						"type": "String"
+					},
+					{
+						"name": "IFO180",
+						"type": "Decimal"
+					},
+					{
+						"name": "IFO380",
+						"type": "Decimal"
+					},
+					{
+						"name": "MGO",
+						"type": "Decimal"
+					},
+					{
+						"name": "DateModified",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ChartererParentsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bkt3vg9i3"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Charterer Parent Name",
+						"type": "String"
+					},
+					{
+						"name": "Notes",
+						"type": "String"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>13.10.6.3</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ChartererParentsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ChartererParents"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "ChartererParentName",
+						"type": "String"
+					},
+					{
+						"name": "Notes",
+						"type": "String"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CoatingCategoriesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bnnwtpnzv"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Category Name",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CoatingCategoriesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.CoatingCategories"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "CategoryName",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CommodityPricesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bnn9p42yb"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "AssessmentType",
+						"type": "String"
+					},
+					{
+						"name": "ReportDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "PriceHigh",
+						"type": "Decimal"
+					},
+					{
+						"name": "PriceLow",
+						"type": "Decimal"
+					},
+					{
+						"name": "PriceAverage",
+						"type": "Decimal"
+					},
+					{
+						"name": "Unit",
+						"type": "String"
+					},
+					{
+						"name": "Remarks",
+						"type": "String"
+					},
+					{
+						"name": "RelatedLocationID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedDataSourceID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedProductID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'10'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.8.10.12.13.14.15.17.25.112.129</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CommodityPricesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.TradeFlows"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "AssessmentType",
+						"type": "String"
+					},
+					{
+						"name": "ReportDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "PriceHigh",
+						"type": "Decimal"
+					},
+					{
+						"name": "PriceLow",
+						"type": "Decimal"
+					},
+					{
+						"name": "PriceAverage",
+						"type": "Decimal"
+					},
+					{
+						"name": "Unit",
+						"type": "String"
+					},
+					{
+						"name": "Remarks",
+						"type": "String"
+					},
+					{
+						"name": "RelatedLocationID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedDataSourceID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedProductID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CommodityRegionsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmnuyqn4d"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "RegionName",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CommodityRegionsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.CommodityRegions"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "RegionName",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		}
+	]
+}

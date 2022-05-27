@@ -1,0 +1,4079 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bn95a4fez"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.AdditionalChargeType"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.AdditionalChargeTypeLoadInfo"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncAdditionalChargeType"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogAdditionalChargeTypeLoadInfo"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk2txxzex"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Berths"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.BerthsLoadInfo"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncBerths"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogBerthsLoadInfo"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkt3vg9i3"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ChartererParents"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ChartererParentsLoadInfo"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncChartererParents"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogChartererParentsLoadInfo"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SPICOAPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordID",
+									"Address Commission": "AddressCommission",
+									"Broker Commission": "BrokerCommission",
+									"Status_OLD": "Status",
+									"P&C": "P&C",
+									"Related Owner Full Style ID": "RelatedOwnerFullStyleID",
+									"Related Charterer Full Style ID": "RelatedChartererFullStyleID",
+									"SPI COA Date": "SPICOADate",
+									"Addendum Date": "AddendumDate",
+									"Addendum Expiry Date": "AddendumExpiryDate",
+									"Addendum Commencement Date": "AddendumCommencementDate",
+									"Renewal Date (Declare by)": "RenewalDate_DeclareBy",
+									"Contract Commencement": "ContractCommencement",
+									"Contract Cancelling": "ContractCancelling",
+									"COA Title_ADMIN": "COA_Title_Admin",
+									"Related SPI Region ID (TM)_ADMIN": "RelatedSPIRegionID_ADMIN",
+									"Status Formula_ADMIN": "StatusFormula_ADMIN",
+									"Renewal Status": "RenewalStatus",
+									"Contract Name Type": "ContractNameType",
+									"COA or Service Agreement": "COAorServiceAgreement",
+									"Broker": "Broker",
+									"Ops PIC Full Name (TM)": "OpsPICFullNameTM",
+									"SPI Office": "SPIOffice",
+									"CP Form": "CPForm",
+									"Freight Basis_Entry": "FreightBasis_Entry",
+									"Period": "Period",
+									"Mos/Years": "Mos_Years",
+									"Option": "Option",
+									"Terms for Optional Period (Asia)": "TermsforOptionalPeriodAsia",
+									"Demurrage Time Bar": "DemurrageTimeBar",
+									"Dem Outcome 1": "DemOutcome1",
+									"Demurrage COA Notes": "DemurrageCOANotes"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SPICOAQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SPICOASQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.SPICOA"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bmqbct5bf"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.SPICOA"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.SPICOALoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncSPICOA"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogSPICOALoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-07-07T14:07:59Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SPIRegionsPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"Region Name": "Name"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SPIRegionsQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SPIRegionsSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.SPIRegions"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bkwzd5b69"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.SPIRegions"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.SPIRegionsLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncSPIRegions"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogSPIRegionsLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-03-03T13:53:38Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ScrapPricesPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select ll.* from\n(SELECT TOP 1 convert(varchar(50), LastLoaded, 120) LastLoaded \n, convert(varchar(50), GETDATE(), 120) StartDateTime \nFROM [ETL].[ScrapPricesLoadInfo]\nORDER BY LastLoaded DESC) ll\nunion\nselect '1/1/1900', getdate()\n",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"QBRecId": "QBRecId",
+									"AssessmentDate": "AssessmentDate",
+									"ScrapLocation": "ScrapLocation",
+									"USD_LDGAverage": "USD_LDGAverage",
+									"Comment": "Comment",
+									"VesselType": "VesselType",
+									"LDTRange": "LDTRange"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ScrapPricesQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ScrapPricesSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": {
+										"value": "@pipeline().parameters.targetTable",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bpeitzc6w"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "Staging.ScrapPrices"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "ETL.ScrapPricesLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncScrapPrices"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "ETL.cp_updateLogScrapPricesLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2019-11-06T16:51:16Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingAreasPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"Shipping Area Name": "Name",
+									"Related Shipping Areas Region ID": "RelatedSARegionID"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ShippingAreasQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ShippingAreasSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.ShippingAreas"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "binf7kuq6"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.ShippingAreas"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.ShippingAreasLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncShippingAreas"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogShippingAreasLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-03-03T13:53:38Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingRegionsPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"Region Name": "RegionName"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ShippingRegionsQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ShippingRegionsSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.ShippingRegions"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bk78eu5jf"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.ShippingRegions"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.ShippingRegionsLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncShippingRegions"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogShippingRegionsLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-03-03T13:53:38Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SpiOfficesPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"Office Name": "OfficeName",
+									"Related SPI Region ID": "RelatedSpiRegionId"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SpiOfficesQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SpiOfficesSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.SpiOffices"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bm8s7vw85"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.SpiOffices"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.SpiOfficesLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncSpiOffices"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogSpiOfficesLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-03-03T13:53:38Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StakeholderPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordID",
+									"Related SPI Fixture ID": "RelatedSPIFixture",
+									"Related Charterer Contact ID": "RelatedChartererContactID",
+									"Email Charterer (Personal)": "EmailChartererPersonal"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "StakeholderQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": "@pipeline().parameters.sourceTable",
+									"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "StakeholderSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.Stakeholder"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bmmyyimid"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.Stakeholder"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.StakeholderLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncStakeholder"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogStakeholderLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2019-12-18T16:32:16Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TankCoatingsPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"Type": "Type",
+									"Related Coating Category ID": "RelatedCoatingCategoryId"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TankCoatingsQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TankCoatingsSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.TankCoatings"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bk2t2skzm"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.TankCoatings"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.TankCoatingsLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncTankCoatings"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogTankCoatingsLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-03-03T13:53:38Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TeamMembersPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"First Name": "FirstName",
+									"Last Name": "LastName",
+									"Email Address": "EmailAddress",
+									"Related Department ID": "RelatedDepartmentId",
+									"Related SPI Office ID": "RelatedSPIOfficeId",
+									"Status": "Status",
+									"Demurrage Manager": "DemurrageManager",
+									"Hybrid (Works as Ops/Chartering)": "Hybrid"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TeamMembersQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TeamMembersSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "@pipeline().parameters.targetTable"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bkwzcz4nd"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.TeamMembers"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.TeamMembersLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncTeamMembers"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogTeamMembersLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2019-11-06T17:12:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TimeChartererPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordID",
+									"Status": "Status",
+									"Vault TC Fixture Number": "VaultTCFixtureNumber",
+									"Related Broker PIC ID": "RelatedBrokerPICID",
+									"Related Backup Broker ID": "RelatedBackupBrokerID",
+									"Related Ops PIC ID": "RelatedOpsPICID",
+									"Related SPI Office ID": "RelatedSPIOfficeID",
+									"Related Contract Admin ID": "RelatedContractAdminID",
+									"Related Negotiator ID": "RelatedNegotiatorID",
+									"Contract Type": "ContractType",
+									"TC CP Date": "TCCPDate",
+									"Charter Party": "CharterParty",
+									"Vessel Fixed As - Official": "VesselFixedAsOfficial",
+									"Related Vessel ID": "RelatedVesselID",
+									"Related Owner Full Style ID": "RelatedOwnerFullStyleID",
+									"Owner Ref": "OwnerRef",
+									"Related Charterer Full Style ID": "RelatedChartererFullStyleID",
+									"Charterer Ref": "ChartererRef",
+									"Period": "Period",
+									"Period Units": "PeriodUnits",
+									"Option Additional Period 1": "OptionAdditionalPeriod1",
+									"Option Additional Period 1 Units": "OptionAdditionalPeriod1Units",
+									"Option Additional Period 2": "OptionAdditionalPeriod2",
+									"Option Additional Period 2 Units": "OptionAdditionalPeriod2Units",
+									"Contract Commencement": "ContractCommencement",
+									"Contract Expirey": "ContractExpirey",
+									"Renewal Date Declare By": "RenewalDateDeclareBy",
+									"Laycan Commencement": "LaycanCommencement",
+									"Laycan Cancelling": "LaycanCancelling",
+									"Currency (for hire)": "CurrencyForHire",
+									"Hire Payment Notes": "HirePaymentNotes",
+									"Hire Rate (first period)": "HireRateFirstPeriod",
+									"Hire Rate (second period)": "HireRateSecondPeriod",
+									"Hire Rate (third period)": "HireRateThirdPeriod",
+									"Hire Payable": "HirePayable",
+									"Frequency Commission Invoiced": "FrequencyCommissionInvoiced",
+									"Address Commission": "AddressCommission",
+									"Broker Commission": "BrokerCommission"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TimeChartererQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": "@pipeline().parameters.sourceTable",
+									"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TimeChartererSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "@pipeline().parameters.targetTable"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bnc56z7ix"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.TimeCharterer"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.TimeChartererLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncTimeCharterer"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogTimeChartererLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2020-08-20T15:43:26Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TradeLanePipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordID",
+									"Tradelane # Liftings Min_Entry": "TradelaneNumLiftingsMin_Entry",
+									"Trade Lane # Liftings Max_Entry": "TradelaneNumLiftingsMax_Entry",
+									"Trade Lane Lifting Qty Min_Entry": "TradeLaneLiftingQtyMin_Entry",
+									"Trade Lane Lifting Qty Max_Entry": "TradeLaneLiftingQtyMax_Entry",
+									"Load Option": "LoadOption",
+									"Freight Details": "FreightDetails",
+									"Lifting Requirement Options": "LiftingRequirementOptions",
+									"Related SPI COA ID": "RelatedSPICOAID",
+									"Trade Lane Title": "TradeLaneTitle"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "TradeLaneQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": "@pipeline().parameters.sourceTable",
+									"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "TradeLaneSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "@pipeline().parameters.targetTable"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bpvrvqrsn"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.TradeLane"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncTradeLane"
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-07-15T16:35:11Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselItineraryPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordID",
+									"Related SPI Fixture ID": "RelatedSPIFixtureID",
+									"Related Parcel Port ID": "RelatedParcelPortID",
+									"Related Port ID": "RelatedPortID",
+									"ETA Start": "ETAStart",
+									"ETA End": "ETAEnd",
+									"Itinerary Port Type": "ItineraryPortType",
+									"Comment for Portal_ADMIN": "Comments",
+									"Date Modified": "DateModified",
+									"ETA Start Original_ADMIN": "ETAStartOriginal_ADMIN",
+									"Original ETA Created On_ADMIN": "OriginalETACreatedOn_ADMIN",
+									"Date ETA Was Updated By Operator_ADMIN": "DateETAWasUpdatedByOperator_BETA",
+									"Vessel Arrived_Override": "VesselPortStatus_Override",
+									"Vessel Port Status Official_ADMIN": "VesselPortStatusOfficial"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VesselItineraryQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": "@pipeline().parameters.sourceTable",
+									"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "VesselItinerarySQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "@pipeline().parameters.targetTable"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bph9mgwku"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.VesselItinerary"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.VesselItineraryLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncVesselItinerary"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogVesselItineraryLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-03-10T17:34:15Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselPricesPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select ll.* from\n(SELECT TOP 1 convert(varchar(50), LastLoaded, 120) LastLoaded \n, convert(varchar(50), GETDATE(), 120) StartDateTime \nFROM [ETL].[VesselPricesLoadInfo]\nORDER BY LastLoaded DESC) ll\nunion\nselect '1/1/1900', getdate()\n",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"QBRecId": "QBRecId",
+									"AssessmentDate": "AssessmentDate",
+									"Age": "Age",
+									"Deadweight": "Deadweight",
+									"IMOType": "IMOType",
+									"PricesUSD": "PricesUSD",
+									"Comments": "Comments",
+									"RelatedCoatingCategoryID": "RelatedCoatingCategoryID"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VesselPricesQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "VesselPricesSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": {
+										"value": "@pipeline().parameters.targetTable",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bpeiu3wbm"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "Staging.VesselPrices"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "ETL.VesselPricesLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncVesselPrices"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "ETL.cp_updateLogVesselPricesLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2019-11-06T17:20:20Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselsPipeLine')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTLookupLastLoaded",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlGenericDataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ACTSetLastLoadedDate",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "QBRecId",
+									"Vessel Name": "VesselName",
+									"Draft (M)": "Draft",
+									"Year Built": "YearBuilt",
+									"Coils": "Coils",
+									"Deadweight": "DeadWeight",
+									"Beam": "Beam",
+									"LOA": "LOA",
+									"Related Owner Parent ID": "RelatedOwnerParentId",
+									"Yard": "Yard",
+									"Ice Entry": "IceEntry",
+									"Registered Owner": "RegisteredOwner",
+									"Clean or Dirty": "CleanDirty",
+									"TC Candidate": "TcCandidate",
+									"IMO  Type": "IMOType",
+									"Tanks": "Tanks",
+									"Pumps": "Pumps",
+									"Segs": "Segs",
+									"CBM": "CBM",
+									"Hull": "Hull",
+									"Ex-Name": "ExName",
+									"Comments": "Comments",
+									"Trade": "Trade",
+									"Country of Build": "CountryOfBuild",
+									"Flag": "Flag",
+									"Data Source": "DataSource",
+									"Commercial_Owner_Operator": "CommercialOwnerOperator",
+									"Related Sale and Purchase ID": "RelatedSaleId",
+									"Archived Vsl": "ArchivedVsl",
+									"Reason for Archive": "ReasonForArchive",
+									"IGS Type": "IGSType",
+									"Status": "Status",
+									"Related Ice Class ID": "RelatedIceClassId",
+									"IMO Certificate Removed": "IMOCertificateRemoved",
+									"KTR Number (Unique)": "KTRNumber",
+									"STST (CBM)": "STSTCBM",
+									"Marine Line (CBM)": "MarineLineCBM",
+									"Interline (CBM)": "InterlineCBM",
+									"Epoxy (CBM)": "EpoxyCBM",
+									"Zinc (CBM)": "ZincCBM",
+									"IMO 1 (CBM)_OLD": "IMO1CBM",
+									"IMO 2 (CBM)": "IMO2CBM",
+									"IMO 3 (CBM)": "IMO3CBM",
+									"YdNo": "YdNo",
+									"NB Contract Date_KTR": "NBContractDate",
+									"Retired Date": "RetiredDate",
+									"KTR Change Date": "KTRChangeDate",
+									"Delivery Date": "DeliveryDate",
+									"Vessel Type": "VesselType",
+									"Related Tank Coating ID": "RelatedCoatingId",
+									"IMO Number": "IMONumber"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VesselsQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"StartDate_WhereClause": {
+										"value": "@variables('varLastLoadedDate')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "VesselsSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": "staging.Vessels"
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetStartTimeStamp",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "startTimeStamp",
+							"value": {
+								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ACTUpdateLog",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTSyncDestination",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ACTSetStartTimeStamp",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.updateLogStoredProc",
+								"type": "Expression"
+							},
+							"storedProcedureParameters": {
+								"LastProcessed": {
+									"value": {
+										"value": "@variables('startTimeStamp')",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "ACTSetLastLoadedDate",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ACTLookupLastLoaded",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "varLastLoadedDate",
+							"value": {
+								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "binf7kupm"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "staging.Vessels"
+					},
+					"logTable": {
+						"type": "String",
+						"defaultValue": "etl.VesselsLoadInfo"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncVessels"
+					},
+					"updateLogStoredProc": {
+						"type": "String",
+						"defaultValue": "etl.cp_updateLogVesselsLoadInfo"
+					},
+					"IsFullLoad": {
+						"type": "int",
+						"defaultValue": 1
+					}
+				},
+				"variables": {
+					"startTimeStamp": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					},
+					"varLastLoadedDate": {
+						"type": "String",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-09-15T19:32:27Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/COAActionsPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordId",
+									"Action Initiated By": "ActionInitiatedBy",
+									"Trigger Event": "TriggerEvent",
+									"Days to Trigger Event": "DaysToTriggerEvent",
+									"Action": "Action",
+									"COA Number": "COANumber",
+									"Action Number": "ActionNumber",
+									"Prior or After": "PriorOrAfter",
+									"Day Type": "DayType"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"RequestBody": {
+										"value": "@pipeline().parameters.requestBody",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": {
+										"value": "@pipeline().parameters.targetTable",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bnv8zsd97"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "Staging.COAActions"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncCOAActions"
+					},
+					"requestBody": {
+						"type": "string",
+						"defaultValue": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken> <query>{'3'.XEX.0}</query> <includeRids>1</includeRids>  <returnpercentage>0</returnpercentage>       <clist>3.7.8.9.11.13.25.37.38</clist>     <slist>3</slist>  <options>csv</options>  </qdbapi>"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-07T18:35:48Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargeTypeTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "AdditionalChargeTypePipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 6,
+						"startTime": "2019-04-02T12:01:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "AdditionalChargesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-06-06T11:34:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BerthsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "BerthsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T11:56:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BunkerPricesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "BunkerPricesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-06-06T11:47:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ChartererParentsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ChartererParentsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 12,
+						"startTime": "2019-04-02T12:05:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

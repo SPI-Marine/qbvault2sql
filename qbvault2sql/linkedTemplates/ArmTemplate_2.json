@@ -1,0 +1,1826 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/NominationsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bnv8h9t7z"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Related Vessel ID",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI COA ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Post Fixture ID_SUM",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI COA Trade Lane ID",
+						"type": "String"
+					},
+					{
+						"name": "Tent Cargo Nom_Original Qty",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Nom_Lacyan Commencement Original",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Nom_Lacyan Cancelling Original",
+						"type": "String"
+					},
+					{
+						"name": "Firm Cargo Nom_Qty",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Request_Lacyan Commencement Original",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Request_Lacyan Cancelling Original",
+						"type": "String"
+					},
+					{
+						"name": "Date Owners Sent Schedule of Available Vessels to Charterers",
+						"type": "String"
+					},
+					{
+						"name": "1st Monday of the Month",
+						"type": "String"
+					},
+					{
+						"name": "Cargo Nomination by Parcel",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Requested Qty",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Capacity Available",
+						"type": "String"
+					},
+					{
+						"name": "Tent Cargo Nom Date Original",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Nom_Date Original",
+						"type": "String"
+					},
+					{
+						"name": "Confirmation Date",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.14.33.287.200.221.231.232.233.245.246.247.254.264.268.269.240.239.128</clist>    <slist>3</slist> <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/NominationsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.Nominations"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedVesselID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPI_COA_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPIFixtureID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPI_COATradeLane",
+						"type": "Int32"
+					},
+					{
+						"name": "TentCargoNom_OriginalQty",
+						"type": "String"
+					},
+					{
+						"name": "VesselNom_LaycanCommencementOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "VesselNom_LaycanCancellingOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "FirmCargoNom_Qty",
+						"type": "String"
+					},
+					{
+						"name": "ChartererRequest_LaycanCommencementOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "ChartererRequest_LaycanCancellingOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "DateOwnersSentScheduleofAvailableVesselstoCharterers",
+						"type": "Date"
+					},
+					{
+						"name": "1stMondayoftheMonth",
+						"type": "Date"
+					},
+					{
+						"name": "CargoNominationbyParcel",
+						"type": "String"
+					},
+					{
+						"name": "ChartererRequestedQty",
+						"type": "String"
+					},
+					{
+						"name": "VesselCapacity",
+						"type": "String"
+					},
+					{
+						"name": "TentCargoNomDateOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "VesselNom_DateOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "ConfirmationDate",
+						"type": "Date"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OwnerInvoiceQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bn5edbwz6"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Date Modified",
+						"type": "String"
+					},
+					{
+						"name": "Invoice Due Amount",
+						"type": "String"
+					},
+					{
+						"name": "Owner Invoice Date",
+						"type": "String"
+					},
+					{
+						"name": "Owner Invoice Number",
+						"type": "String"
+					},
+					{
+						"name": "Date Owners Received Frt Payment",
+						"type": "String"
+					},
+					{
+						"name": "Owner Invoice Attachment",
+						"type": "String"
+					},
+					{
+						"name": "Date Invoice Received by SPI",
+						"type": "String"
+					},
+					{
+						"name": "Date Validated by SPI",
+						"type": "String"
+					},
+					{
+						"name": "Date Invoice Sent to Charterer",
+						"type": "String"
+					},
+					{
+						"name": "Date Verified by Charterer",
+						"type": "String"
+					},
+					{
+						"name": "Internal Invoice Notes",
+						"type": "String"
+					},
+					{
+						"name": "Currency",
+						"type": "String"
+					},
+					{
+						"name": "Invoice Type",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Invoice Status_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Owners Due Date",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.2.6.7.8.9.10.11.12.13.14.15.16.17.18.31.33</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OwnerInvoiceSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.OwnerInvoice"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "DateModified",
+						"type": "DateTime"
+					},
+					{
+						"name": "InvoiceDueAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "OwnerInvoiceDate",
+						"type": "String"
+					},
+					{
+						"name": "OwnerInvoiceNumber",
+						"type": "String"
+					},
+					{
+						"name": "DateOwnersReceivedFrtPayment",
+						"type": "String"
+					},
+					{
+						"name": "OwnerInvoiceAttachment",
+						"type": "String"
+					},
+					{
+						"name": "DateInvoiceReceivedbySPI",
+						"type": "String"
+					},
+					{
+						"name": "DateValidatedbySPI",
+						"type": "String"
+					},
+					{
+						"name": "DateInvoiceSenttoCharterer",
+						"type": "String"
+					},
+					{
+						"name": "DateVerifiedbyCharterer",
+						"type": "String"
+					},
+					{
+						"name": "InternalInvoiceNotes",
+						"type": "String"
+					},
+					{
+						"name": "Currency",
+						"type": "String"
+					},
+					{
+						"name": "InvoiceType",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSPIFixtureID",
+						"type": "Int32"
+					},
+					{
+						"name": "InvoiceStatus_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "OwnersDueDate",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OwnerParentsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bkt3wk8uh"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Owner Parent Name",
+						"type": "String"
+					},
+					{
+						"name": "Notes",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.10</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OwnerParentsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.OwnerParents"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "OwnerParentName",
+						"type": "String"
+					},
+					{
+						"name": "Notes",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelAdditionalChargesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bnu6iup95"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Related Parcel ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Related Additional Charge ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Parcel Additional Charge Amount Due_QBC",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.17.6.29</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelAdditionalChargesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ParcelAdditionalCharges"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedParcelID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedAdditionalChargeID",
+						"type": "Int32"
+					},
+					{
+						"name": "ParcelAdditionalChargeAmountDue_QBC",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelBerthsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bm3raeq5e"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Prorate Laytime_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID (LDP)",
+						"type": "Int32"
+					},
+					{
+						"name": "Related Berth ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Related Port ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Laytime Allowed BERTH hrs_QBC",
+						"type": "Decimal"
+					},
+					{
+						"name": "Laytime Allowed BL BERTH mtph_QBC",
+						"type": "Decimal"
+					},
+					{
+						"name": "Laytime Type BERTH_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Related Load Disch Port ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Berth Demurrage_ADMIN",
+						"type": "Decimal"
+					},
+					{
+						"name": "Laytime Type BERTH_QBC_2",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.134.11.12.215.114.291.286.7.302.306</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelBerthsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ParcelBerths"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "Prorate",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSpiFixtureId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedBerthId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedPortId",
+						"type": "Int32"
+					},
+					{
+						"name": "LaytimeAllowedBerthHrs_QBC",
+						"type": "Decimal"
+					},
+					{
+						"name": "LaytimeAllowedBerthMtph_QBC",
+						"type": "Decimal"
+					},
+					{
+						"name": "LaytimeTypeBerth_QBC",
+						"type": "String"
+					},
+					{
+						"name": "RelatedLDPId",
+						"type": "Int32"
+					},
+					{
+						"name": "BerthDemurrage_QBC",
+						"type": "Decimal"
+					},
+					{
+						"name": "LAYTIME TYPE BERTH OFFICIAL_QBC",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelPortsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmf5abifq"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Order Entry_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Port ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Charterer ETA update ID",
+						"type": "String"
+					},
+					{
+						"name": "ETA Start",
+						"type": "String"
+					},
+					{
+						"name": "ETA End",
+						"type": "String"
+					},
+					{
+						"name": "ETA Start Original",
+						"type": "String"
+					},
+					{
+						"name": "Laytime Allowed PORT mtph_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Laytime Allowed Type Port_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "ETA End Original",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Delivery Commencement Window",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Delivery Cancelling Window",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.17.25.461.460.462.459.544.541.7.534.520.521</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelPortsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ParcelPorts"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "Order",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSpiFixtureId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedPortId",
+						"type": "Int32"
+					},
+					{
+						"name": "ETAStart",
+						"type": "String"
+					},
+					{
+						"name": "ETAEnd",
+						"type": "String"
+					},
+					{
+						"name": "ETAStartOriginal",
+						"type": "String"
+					},
+					{
+						"name": "RelatedETAUpdateId",
+						"type": "Int32"
+					},
+					{
+						"name": "LaytimeAllowedPortMtph_QBC",
+						"type": "Decimal"
+					},
+					{
+						"name": "LaytimeAllowedTypePort_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "ETAEndOriginal",
+						"type": "String"
+					},
+					{
+						"name": "ChartererDeliveryCommencementWindow",
+						"type": "String"
+					},
+					{
+						"name": "ChartererDeliveryCancellingWindow",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelProductsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bntybms7q"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Qty (max)",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Qty (min)",
+						"type": "String"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "Related Product ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Quote/nomination ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Market Info ID",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI COA Products ID",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.46.45.33.6.26.21.8.29</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelProductsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ParcelProducts"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "NominatedQtyMax",
+						"type": "Decimal"
+					},
+					{
+						"name": "NominatedQtyMin",
+						"type": "Decimal"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "RelatedProductId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedCOANominationId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedMarketInfoId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPIFixtureId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPICOAProductsId",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmetvurzg"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Bill_Lading_Date",
+						"type": "String"
+					},
+					{
+						"name": "Date Modified",
+						"type": "String"
+					},
+					{
+						"name": "Date Created",
+						"type": "String"
+					},
+					{
+						"name": "Out-Turn Qty",
+						"type": "String"
+					},
+					{
+						"name": "Ship Loaded Qty",
+						"type": "String"
+					},
+					{
+						"name": "Ship Discharge Qty",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Qty",
+						"type": "String"
+					},
+					{
+						"name": "BL Qty",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "Paytment Type",
+						"type": "String"
+					},
+					{
+						"name": "Unit",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Load Parcel Port ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Load Parcel Berth ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Disch Parcel Port ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Market Info ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Nomination ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Disch Parcel Berth ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Parcel Product ID",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Freight Amount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Demurrage Vault Estimated Amount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Demurrage Agreed Pro-ration_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Demurrage Agreed Amount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Demurrage Claim Amount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "Deadfreight Qty",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Number_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Parcel Frt Rate CP PMT_Data_Entry",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name (S)",
+						"type": "String"
+					},
+					{
+						"name": "Receiver Name (R)",
+						"type": "String"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "Tentative Cargo Nom Qty",
+						"type": "String"
+					},
+					{
+						"name": "Tentative Cargo Nom Date Original",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Request_Laycan Commencement Original",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Request_Laycan Cancelling Original",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Requested Quantity",
+						"type": "String"
+					},
+					{
+						"name": "Hypothetical Frt Rate",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.425.2.1.289.413.414.165.459.117.116.75.83.90.154.93.433.505.156.529.115.634.653.652.651.671.555.76.656.621.521.695.696.701.702.703.704</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParcelsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.Parcels"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QbRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "BillLadingDate",
+						"type": "String"
+					},
+					{
+						"name": "DateModified",
+						"type": "String"
+					},
+					{
+						"name": "DateCreated",
+						"type": "String"
+					},
+					{
+						"name": "OutTurnQty",
+						"type": "String"
+					},
+					{
+						"name": "ShipLoadedQty",
+						"type": "String"
+					},
+					{
+						"name": "ShipDischargeQty",
+						"type": "String"
+					},
+					{
+						"name": "NominatedQty",
+						"type": "String"
+					},
+					{
+						"name": "BLQty",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "PaymentType",
+						"type": "String"
+					},
+					{
+						"name": "Unit",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSpiFixtureId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedLoadPortID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedLoadBerth",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedDischPortId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedMarketInfoId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedLiftingNominationId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedDischBerth",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedParcelProductId",
+						"type": "Int32"
+					},
+					{
+						"name": "ParcelFreightAmountQBC",
+						"type": "String"
+					},
+					{
+						"name": "DemurrageVaultEstimateAmount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "DemurrageAgreedPro-ration_QBC",
+						"type": "String"
+					},
+					{
+						"name": "DemurrageAgreedAmount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "DemurrageClaimAmount_QBC",
+						"type": "String"
+					},
+					{
+						"name": "DeadfreightQty",
+						"type": "String"
+					},
+					{
+						"name": "ParcelNumber",
+						"type": "Byte"
+					},
+					{
+						"name": "ParcelFrtRate",
+						"type": "String"
+					},
+					{
+						"name": "SupplierName",
+						"type": "String"
+					},
+					{
+						"name": "ReceiverName",
+						"type": "String"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "TentativeCargoNomQty",
+						"type": "String"
+					},
+					{
+						"name": "TentativeCargoNomDateOriginal",
+						"type": "Date"
+					},
+					{
+						"name": "ChartererRequest_LaycanCommencementOriginal",
+						"type": "String"
+					},
+					{
+						"name": "ChartererRequest_LaycanCancellingOriginal",
+						"type": "String"
+					},
+					{
+						"name": "ChartererRequestedQuantity",
+						"type": "String"
+					},
+					{
+						"name": "HypotheticalFrtRate",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PlantsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmpt8yer2"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "PlantName",
+						"type": "String"
+					},
+					{
+						"name": "Capacity",
+						"type": "Decimal"
+					},
+					{
+						"name": "Unit",
+						"type": "String"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "Contractor",
+						"type": "String"
+					},
+					{
+						"name": "LocalRegion",
+						"type": "String"
+					},
+					{
+						"name": "PlantLocation",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "ShutdownDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ReOpenDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "RelatedCountryID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedProductsID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.7.8.9.10.11.12.16.17.18.19.25</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PlantsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.Plants"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "PlantName",
+						"type": "String"
+					},
+					{
+						"name": "Capacity",
+						"type": "Decimal"
+					},
+					{
+						"name": "Unit",
+						"type": "String"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "Contractor",
+						"type": "String"
+					},
+					{
+						"name": "LocalRegion",
+						"type": "String"
+					},
+					{
+						"name": "PlantLocation",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "ShutdownDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ReOpenDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "RelatedCountryID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedProductsID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PortEventTimesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmffryf7t"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Event_Name_Reports",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.18.15</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PortEventTimesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.PortEventTimes"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "EventNameReports",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

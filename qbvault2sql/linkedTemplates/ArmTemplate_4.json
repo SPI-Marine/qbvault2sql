@@ -1,0 +1,1534 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ScrapPricesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.ScrapPrices"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "AssessmentDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ScrapLocation",
+						"type": "String"
+					},
+					{
+						"name": "USD_LDGAverage",
+						"type": "Decimal"
+					},
+					{
+						"name": "Comment",
+						"type": "String"
+					},
+					{
+						"name": "VesselType",
+						"type": "String"
+					},
+					{
+						"name": "LDTRange",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingAreasQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "binf7kuq6"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Shipping Area Name",
+						"type": "String"
+					},
+					{
+						"name": "Related Shipping Areas Region ID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi> <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.6.33</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingAreasSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ShippingAreas"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSARegionID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingRegionsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bk78eu5jf"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Region Name",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi> <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.6</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingRegionsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.ShippingRegions"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "RegionName",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SpiOfficesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bm8s7vw85"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Office Name",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Region ID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi> <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.6.17</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SpiOfficesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.SpiOffices"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "OfficeName",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSpiRegionId",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StakeholderQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmmyyimid"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Charterer Contact ID",
+						"type": "String"
+					},
+					{
+						"name": "Email Charterer (Personal)",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}</query>    <includeRids>1</includeRids>    <clist>3.6.10.50</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StakeholderSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.Stakeholder"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPIFixture",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedChartererContactID",
+						"type": "Int32"
+					},
+					{
+						"name": "EmailChartererPersonal",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TankCoatingsQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bk2t2skzm"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "Related Coating Category ID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.12</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TankCoatingsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.TankCoatings"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "Type",
+						"type": "String"
+					},
+					{
+						"name": "RelatedCoatingCategoryId",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TeamMembersQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bkwzcz4nd"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "Int32"
+					},
+					{
+						"name": "First Name",
+						"type": "String"
+					},
+					{
+						"name": "Last Name",
+						"type": "String"
+					},
+					{
+						"name": "Email Address",
+						"type": "String"
+					},
+					{
+						"name": "Related Department ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Related SPI Office ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "Demurrage Manager",
+						"type": "String"
+					},
+					{
+						"name": "Hybrid (Works as Ops/Chartering)",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi> <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids>\n<returnpercentage>0</returnpercentage>\n<clist>3.6.7.8.19.97.63.72.56</clist>\n<slist>3</slist>\n<options>csv</options>\n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TeamMembersSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.TeamMembers"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "FirstName",
+						"type": "String"
+					},
+					{
+						"name": "LastName",
+						"type": "String"
+					},
+					{
+						"name": "EmailAddress",
+						"type": "String"
+					},
+					{
+						"name": "RelatedDepartmentId",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPIOfficeId",
+						"type": "Int32"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "DemurrageManager",
+						"type": "String"
+					},
+					{
+						"name": "Hybrid",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TimeChartererQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bnc56z7ix"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "Vault TC Fixture Number",
+						"type": "String"
+					},
+					{
+						"name": "Related Broker PIC ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Backup Broker ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Ops PIC ID",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Office ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Contract Admin ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Negotiator ID",
+						"type": "String"
+					},
+					{
+						"name": "Contract Type",
+						"type": "String"
+					},
+					{
+						"name": "TC CP Date",
+						"type": "String"
+					},
+					{
+						"name": "Charter Party",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Fixed As - Official",
+						"type": "String"
+					},
+					{
+						"name": "Related Vessel ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Owner Full Style ID",
+						"type": "String"
+					},
+					{
+						"name": "Owner Ref",
+						"type": "String"
+					},
+					{
+						"name": "Related Charterer Full Style ID",
+						"type": "String"
+					},
+					{
+						"name": "Charterer Ref",
+						"type": "String"
+					},
+					{
+						"name": "Period",
+						"type": "String"
+					},
+					{
+						"name": "Period Units",
+						"type": "String"
+					},
+					{
+						"name": "Option Additional Period 1",
+						"type": "String"
+					},
+					{
+						"name": "Option Additional Period 1 Units",
+						"type": "String"
+					},
+					{
+						"name": "Option Additional Period 2",
+						"type": "String"
+					},
+					{
+						"name": "Option Additional Period 2 Units",
+						"type": "String"
+					},
+					{
+						"name": "Contract Commencement",
+						"type": "String"
+					},
+					{
+						"name": "Contract Expirey",
+						"type": "String"
+					},
+					{
+						"name": "Renewal Date Declare By",
+						"type": "String"
+					},
+					{
+						"name": "Laycan Commencement",
+						"type": "String"
+					},
+					{
+						"name": "Laycan Cancelling",
+						"type": "String"
+					},
+					{
+						"name": "Currency (for hire)",
+						"type": "String"
+					},
+					{
+						"name": "Hire Payment Notes",
+						"type": "String"
+					},
+					{
+						"name": "Hire Rate (first period)",
+						"type": "String"
+					},
+					{
+						"name": "Hire Rate (second period)",
+						"type": "String"
+					},
+					{
+						"name": "Hire Rate (third period)",
+						"type": "String"
+					},
+					{
+						"name": "Hire Payable",
+						"type": "String"
+					},
+					{
+						"name": "Frequency Commission Invoiced",
+						"type": "String"
+					},
+					{
+						"name": "Address Commission",
+						"type": "String"
+					},
+					{
+						"name": "Broker Commission",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.6.47.94.107.91.112.101.104.110.27.25.84.29.85.43.88.44.7.8.9.10.11.12.98.99.100.17.18.40.45.19.20.21.22.46.23.24</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TimeChartererSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.TimeCharterer"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "Status",
+						"type": "String"
+					},
+					{
+						"name": "VaultTCFixtureNumber",
+						"type": "String"
+					},
+					{
+						"name": "RelatedBrokerPICID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedBackupBrokerID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedOpsPICID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedSPIOfficeID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedContractAdminID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedNegotiatorID",
+						"type": "Int32"
+					},
+					{
+						"name": "ContractType",
+						"type": "String"
+					},
+					{
+						"name": "TCCPDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "CharterParty",
+						"type": "String"
+					},
+					{
+						"name": "VesselFixedAsOfficial",
+						"type": "String"
+					},
+					{
+						"name": "RelatedVesselID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedOwnerFullStyleID",
+						"type": "Int32"
+					},
+					{
+						"name": "OwnerRef",
+						"type": "String"
+					},
+					{
+						"name": "RelatedChartererFullStyleID",
+						"type": "Int32"
+					},
+					{
+						"name": "ChartererRef",
+						"type": "String"
+					},
+					{
+						"name": "Period",
+						"type": "Decimal"
+					},
+					{
+						"name": "PeriodUnits",
+						"type": "String"
+					},
+					{
+						"name": "OptionAdditionalPeriod1",
+						"type": "Decimal"
+					},
+					{
+						"name": "OptionAdditionalPeriod1Units",
+						"type": "String"
+					},
+					{
+						"name": "OptionAdditionalPeriod2",
+						"type": "Decimal"
+					},
+					{
+						"name": "OptionAdditionalPeriod2Units",
+						"type": "String"
+					},
+					{
+						"name": "ContractCommencement",
+						"type": "Date"
+					},
+					{
+						"name": "ContractExpirey",
+						"type": "Date"
+					},
+					{
+						"name": "RenewalDateDeclareBy",
+						"type": "Date"
+					},
+					{
+						"name": "LaycanCommencement",
+						"type": "DateTime"
+					},
+					{
+						"name": "LaycanCancelling",
+						"type": "DateTime"
+					},
+					{
+						"name": "CurrencyForHire",
+						"type": "String"
+					},
+					{
+						"name": "HirePaymentNotes",
+						"type": "String"
+					},
+					{
+						"name": "HireRateFirstPeriod",
+						"type": "Decimal"
+					},
+					{
+						"name": "HireRateSecondPeriod",
+						"type": "Decimal"
+					},
+					{
+						"name": "HireRateThirdPeriod",
+						"type": "Decimal"
+					},
+					{
+						"name": "HirePayable",
+						"type": "String"
+					},
+					{
+						"name": "FrequencyCommissionInvoiced",
+						"type": "String"
+					},
+					{
+						"name": "AddressCommission",
+						"type": "String"
+					},
+					{
+						"name": "BrokerCommission",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TradeLaneQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bpvrvqrsn"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Tradelane # Liftings Min_Entry",
+						"type": "String"
+					},
+					{
+						"name": "Trade Lane # Liftings Max_Entry",
+						"type": "String"
+					},
+					{
+						"name": "Trade Lane Lifting Qty Min_Entry",
+						"type": "String"
+					},
+					{
+						"name": "Trade Lane Lifting Qty Max_Entry",
+						"type": "String"
+					},
+					{
+						"name": "Load Option",
+						"type": "String"
+					},
+					{
+						"name": "Freight Details",
+						"type": "String"
+					},
+					{
+						"name": "Lifting Requirement Options",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI COA ID",
+						"type": "String"
+					},
+					{
+						"name": "Trade Lane Title",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query></query>    <includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      <clist>3.33.34.35.36.45.31.64.6.65</clist>    <slist></slist> <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TradeLaneSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.TradeLane"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "TradelaneNumLiftingsMin_Entry",
+						"type": "String"
+					},
+					{
+						"name": "TradelaneNumLiftingsMax_Entry",
+						"type": "String"
+					},
+					{
+						"name": "TradeLaneLiftingQtyMin_Entry",
+						"type": "String"
+					},
+					{
+						"name": "TradeLaneLiftingQtyMax_Entry",
+						"type": "String"
+					},
+					{
+						"name": "LoadOption",
+						"type": "String"
+					},
+					{
+						"name": "FreightDetails",
+						"type": "String"
+					},
+					{
+						"name": "LiftingRequirementOptions",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSPICOAID",
+						"type": "Int32"
+					},
+					{
+						"name": "TradeLaneTitle",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselItineraryQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bph9mgwku"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Related SPI Fixture ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Parcel Port ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Port ID",
+						"type": "String"
+					},
+					{
+						"name": "ETA Start",
+						"type": "String"
+					},
+					{
+						"name": "ETA End",
+						"type": "String"
+					},
+					{
+						"name": "Itinerary Port Type",
+						"type": "String"
+					},
+					{
+						"name": "Comment for Portal_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Date Modified",
+						"type": "String"
+					},
+					{
+						"name": "ETA Start Original_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Original ETA Created On_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Date ETA Was Updated By Operator_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Arrived_Override",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Port Status Official_ADMIN",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.6.7.9.11.12.13.19.2.57.58.73.75.76</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselItinerarySQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.VesselItinerary"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSPIFixtureID",
+						"type": "String"
+					},
+					{
+						"name": "RelatedParcelPortID",
+						"type": "String"
+					},
+					{
+						"name": "RelatedPortID",
+						"type": "String"
+					},
+					{
+						"name": "ETAStart",
+						"type": "String"
+					},
+					{
+						"name": "ETAEnd",
+						"type": "String"
+					},
+					{
+						"name": "ItineraryPortType",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "DateModified",
+						"type": "String"
+					},
+					{
+						"name": "ETAStartOriginal_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "OriginalETACreatedOn_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "DateETAWasUpdatedByOperator_BETA",
+						"type": "String"
+					},
+					{
+						"name": "VesselPortStatus_Override",
+						"type": "String"
+					},
+					{
+						"name": "VesselPortStatusOfficial",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselPricesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bpeiu3wbm"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "AssessmentDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "Age",
+						"type": "String"
+					},
+					{
+						"name": "Deadweight",
+						"type": "String"
+					},
+					{
+						"name": "IMOType",
+						"type": "String"
+					},
+					{
+						"name": "PricesUSD",
+						"type": "Decimal"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "RelatedCoatingCategoryID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'6'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.7.8.9.11.12.13</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

@@ -1,0 +1,1009 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmd6t28k5"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.PostFixtures"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.PostFixturesLoadInfo"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncPostFixtures"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
+		},
+		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bnqjqzj72"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ProductType"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ProductTypeLoadInfo"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncProductType"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogProductTypeLoadInfo"
+		},
+		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "biuhrjz6v"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Products"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ProductsLoadInfo"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncProducts"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogProductsLoadInfo"
+		},
+		"ProductsTrigger_properties_ProductsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmqbct5bf"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.SPICOA"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.SPICOALoadInfo"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncSPICOA"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogSPICOALoadInfo"
+		},
+		"SPICOATrigger_properties_SPICOAPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkwzd5b69"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.SPIRegions"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.SPIRegionsLoadInfo"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncSPIRegions"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogSPIRegionsLoadInfo"
+		},
+		"SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "binf7kuq6"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ShippingAreas"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ShippingAreasLoadInfo"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncShippingAreas"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogShippingAreasLoadInfo"
+		},
+		"ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk78eu5jf"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ShippingRegions"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ShippingRegionsLoadInfo"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncShippingRegions"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogShippingRegionsLoadInfo"
+		},
+		"ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bm8s7vw85"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.SpiOffices"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.SpiOfficesLoadInfo"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncSpiOffices"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogSpiOfficesLoadInfo"
+		},
+		"SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 0
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk2t2skzm"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.TankCoatings"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.TankCoatingsLoadInfo"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncTankCoatings"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogTankCoatingsLoadInfo"
+		},
+		"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkwzcz4nd"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.TeamMembers"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.TeamMembersLoadInfo"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncTeamMembers"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogTeamMembersLoadInfo"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "binf7kupm"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Vessels"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.VesselsLoadInfo"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncVessels"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogVesselsLoadInfo"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PositionsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PositionsPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2020-01-23T17:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PostFixturesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PostFixturesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-04-02T12:15:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ProductTypeTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ProductTypePipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-10T11:01:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ProductsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ProductsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('ProductsTrigger_properties_ProductsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:15:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RowLevelSecurity_Hourly')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "RowLevelSecurityPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2020-05-21T17:22:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SOFEventsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SOFEventsPipeLine_FullPull",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-04-02T12:18:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SPICOATrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SPICOAPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('SPICOATrigger_properties_SPICOAPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:18:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SPIRegionsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SPIRegionsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('SPIRegionsTrigger_properties_SPIRegionsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:19:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ScrapPricesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ScrapPricesPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-06-04T21:18:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingAreasTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ShippingAreasPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('ShippingAreasTrigger_properties_ShippingAreasPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:16:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ShippingRegionsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ShippingRegionsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('ShippingRegionsTrigger_properties_ShippingRegionsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:17:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SpiOfficesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SpiOfficesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('SpiOfficesTrigger_properties_SpiOfficesPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 6,
+						"startTime": "2019-04-02T12:18:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							],
+							"monthDays": [
+								1
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StakeholderTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "StakeholderPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-12-18T16:45:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TankCoatingsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "TankCoatingsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:20:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TeamMembersTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "TeamMembersPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:20:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TimeChartererTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "TimeChartererPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 6,
+						"startTime": "2020-08-20T15:21:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselItineraryTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Daily trigger to load VesselItinerary table from QB",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "VesselItineraryPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-08-16T20:51:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselPricesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "VesselPricesPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-06-04T21:16:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "VesselsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-04-02T12:21:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Daily_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "COAActionsPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2022-05-27T13:29:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								6
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
