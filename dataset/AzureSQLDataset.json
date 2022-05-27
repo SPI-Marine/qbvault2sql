@@ -15,15 +15,39 @@
 		"type": "AzureSqlTable",
 		"structure": [
 			{
-				"name": "RecordID",
-				"type": "Int64"
+				"name": "RecordId",
+				"type": "Int32"
 			},
 			{
-				"name": "ChargeType",
+				"name": "ActionInitiatedBy",
 				"type": "String"
 			},
 			{
-				"name": "ChargeCategory",
+				"name": "TriggerEvent",
+				"type": "String"
+			},
+			{
+				"name": "DaysToTriggerEvent",
+				"type": "Int32"
+			},
+			{
+				"name": "Action",
+				"type": "String"
+			},
+			{
+				"name": "COANumber",
+				"type": "String"
+			},
+			{
+				"name": "ActionNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "PriorOrAfter",
+				"type": "String"
+			},
+			{
+				"name": "DayType",
 				"type": "String"
 			}
 		],

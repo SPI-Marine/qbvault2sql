@@ -16,6 +16,44 @@
 		},
 		"annotations": [],
 		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "Action Initiated By",
+				"type": "String"
+			},
+			{
+				"name": "Trigger Event",
+				"type": "String"
+			},
+			{
+				"name": "Days to Trigger Event",
+				"type": "String"
+			},
+			{
+				"name": "Action",
+				"type": "String"
+			},
+			{
+				"name": "COA Number",
+				"type": "String"
+			},
+			{
+				"name": "Action Number",
+				"type": "String"
+			},
+			{
+				"name": "Prior or After",
+				"type": "String"
+			},
+			{
+				"name": "Day Type",
+				"type": "String"
+			}
+		],
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",

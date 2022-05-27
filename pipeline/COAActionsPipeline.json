@@ -23,7 +23,7 @@
 						"type": "SqlSink",
 						"writeBatchSize": 10000,
 						"preCopyScript": {
-							"value": "TRUNCATE TABLE IF EXISTS @{pipeline().parameters.targetTable}",
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
 							"type": "Expression"
 						},
 						"writeBehavior": "insert",
@@ -34,9 +34,15 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"QBRecId": "QBRecId",
-							"CountryName": "CountryName",
-							"RelatedCommodityRegionID": "RelatedCommodityRegionID"
+							"Record ID#": "RecordId",
+							"Action Initiated By": "ActionInitiatedBy",
+							"Trigger Event": "TriggerEvent",
+							"Days to Trigger Event": "DaysToTriggerEvent",
+							"Action": "Action",
+							"COA Number": "COANumber",
+							"Action Number": "ActionNumber",
+							"Prior or After": "PriorOrAfter",
+							"Day Type": "DayType"
 						}
 					}
 				},
