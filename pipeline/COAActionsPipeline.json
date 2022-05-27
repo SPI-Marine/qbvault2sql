@@ -1,0 +1,125 @@
+{
+	"name": "COAActionsPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE IF EXISTS @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						},
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"QBRecId": "QBRecId",
+							"CountryName": "CountryName",
+							"RelatedCommodityRegionID": "RelatedCommodityRegionID"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "GenericQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"RequestBody": {
+								"value": "@pipeline().parameters.requestBody",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bnv8zsd97"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "Staging.COAActions"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncCOAActions"
+			},
+			"requestBody": {
+				"type": "string",
+				"defaultValue": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken> <query>{'3'.XEX.0}</query> <includeRids>1</includeRids>  <returnpercentage>0</returnpercentage>       <clist>3.7.8.9.11.13.25.37.38</clist>     <slist>3</slist>  <options>csv</options>  </qdbapi>"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-07T18:35:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
