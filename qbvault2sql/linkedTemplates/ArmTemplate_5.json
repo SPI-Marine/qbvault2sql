@@ -13,6 +13,87 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/VesselPricesQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bpeiu3wbm"
+					},
+					"StartDate_WhereClause": {
+						"type": "string",
+						"defaultValue": "1900-01-01"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "AssessmentDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "Age",
+						"type": "String"
+					},
+					{
+						"name": "Deadweight",
+						"type": "String"
+					},
+					{
+						"name": "IMOType",
+						"type": "String"
+					},
+					{
+						"name": "PricesUSD",
+						"type": "Decimal"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "RelatedCoatingCategoryID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'6'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.7.8.9.11.12.13</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/VesselPricesSQLDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -551,90 +632,6 @@
 				"typeProperties": {
 					"tableName": {
 						"value": "@dataset().tableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/GenericQBDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "QBHttpLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"QBTableName": {
-						"type": "string",
-						"defaultValue": "bmptx8x2q"
-					},
-					"RequestBody": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "HttpFile",
-				"structure": [
-					{
-						"name": "Record ID#",
-						"type": "String"
-					},
-					{
-						"name": "Action Initiated By",
-						"type": "String"
-					},
-					{
-						"name": "Trigger Event",
-						"type": "String"
-					},
-					{
-						"name": "Days to Trigger Event",
-						"type": "String"
-					},
-					{
-						"name": "Action",
-						"type": "String"
-					},
-					{
-						"name": "COA Number",
-						"type": "String"
-					},
-					{
-						"name": "Action Number",
-						"type": "String"
-					},
-					{
-						"name": "Prior or After",
-						"type": "String"
-					},
-					{
-						"name": "Day Type",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"relativeUrl": {
-						"value": "@dataset().QBTableName",
-						"type": "Expression"
-					},
-					"requestMethod": "POST",
-					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
-					"requestBody": {
-						"value": "@dataset().RequestBody",
 						"type": "Expression"
 					}
 				}
@@ -1722,6 +1719,143 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/COAActionsPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACTFetchDeltaData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:30:00"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"preCopyScript": {
+									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+									"type": "Expression"
+								},
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Record ID#": "RecordId",
+									"Action Initiated By": "ActionInitiatedBy",
+									"Trigger Event": "TriggerEvent",
+									"Days to Trigger Event": "DaysToTriggerEvent",
+									"Action": "Action",
+									"COA Number": "COANumber",
+									"Action Number": "ActionNumber",
+									"Prior or After": "PriorOrAfter",
+									"Day Type": "DayType"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "GenericQBDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"QBTableName": {
+										"value": "@pipeline().parameters.sourceTable",
+										"type": "Expression"
+									},
+									"RequestBody": {
+										"value": "@pipeline().parameters.requestBody",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSQLDataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": {
+										"value": "@pipeline().parameters.targetTable",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "ACTSyncDestination",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "ACTFetchDeltaData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.syncStoredProc",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDBLinkedService",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"sourceTable": {
+						"type": "String",
+						"defaultValue": "bnv8zsd97"
+					},
+					"targetTable": {
+						"type": "String",
+						"defaultValue": "Staging.COAActions"
+					},
+					"syncStoredProc": {
+						"type": "String",
+						"defaultValue": "dbo.cp_syncCOAActions"
+					},
+					"requestBody": {
+						"type": "string",
+						"defaultValue": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken> <query>{'3'.XEX.0}</query> <includeRids>1</includeRids>  <returnpercentage>0</returnpercentage>       <clist>3.7.8.9.11.13.25.37.38</clist>     <slist>3</slist>  <options>csv</options>  </qdbapi>"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-07T18:35:48Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ChartererParentsPipeLine')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1793,8 +1927,7 @@
 								"columnMappings": {
 									"Record ID#": "QBRecId",
 									"Charterer Parent Name": "ChartererParentName",
-									"Notes": "Notes",
-									"Type": "Type"
+									"Notes": "Notes"
 								}
 							}
 						},
@@ -4354,126 +4487,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-03-07T18:35:48Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IHSHSCodesPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ACTFetchDeltaData",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "HttpSource",
-								"httpRequestTimeout": "00:30:00"
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000,
-								"preCopyScript": {
-									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Record ID#": "QBRecId",
-									"Product Name": "ProductName",
-									"HS Code": "HSCode"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "IHSHSCodesQBDataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"QBTableName": {
-										"value": "@pipeline().parameters.sourceTable",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "IHSHSCodesSQLDataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"tableName": {
-										"value": "@pipeline().parameters.targetTable",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "ACTSyncDestination",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "ACTFetchDeltaData",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": {
-								"value": "@pipeline().parameters.syncStoredProc",
-								"type": "Expression"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDBLinkedService",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"sourceTable": {
-						"type": "String",
-						"defaultValue": "br4ikr62m"
-					},
-					"targetTable": {
-						"type": "String",
-						"defaultValue": "Staging.IHSHSCodes"
-					},
-					"syncStoredProc": {
-						"type": "String",
-						"defaultValue": "dbo.cp_syncIHSHSCodes"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-02-07T17:05:45Z"
 			},
 			"dependsOn": []
 		}

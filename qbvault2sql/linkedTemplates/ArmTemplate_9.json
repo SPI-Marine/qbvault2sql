@@ -7,6 +7,30 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "qbvault2sql"
 		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "biunaupmj"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Ports"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.PortsLoadInfo"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncPorts"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogPortsLoadInfo"
+		},
+		"PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
 		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable": {
 			"type": "string",
 			"defaultValue": "bmd6t28k5"
@@ -276,6 +300,49 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PortsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PortsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:15:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PositionsTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -964,42 +1031,6 @@
 						"interval": 1,
 						"startTime": "2019-04-02T12:21:00Z",
 						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Daily_Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "COAActionsPipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2022-05-27T13:29:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								6
-							]
-						}
 					}
 				}
 			},

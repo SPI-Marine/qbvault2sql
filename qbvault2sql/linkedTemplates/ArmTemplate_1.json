@@ -428,6 +428,90 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/GenericQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string",
+						"defaultValue": "bmptx8x2q"
+					},
+					"RequestBody": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "Action Initiated By",
+						"type": "String"
+					},
+					{
+						"name": "Trigger Event",
+						"type": "String"
+					},
+					{
+						"name": "Days to Trigger Event",
+						"type": "String"
+					},
+					{
+						"name": "Action",
+						"type": "String"
+					},
+					{
+						"name": "COA Number",
+						"type": "String"
+					},
+					{
+						"name": "Action Number",
+						"type": "String"
+					},
+					{
+						"name": "Prior or After",
+						"type": "String"
+					},
+					{
+						"name": "Day Type",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "@dataset().RequestBody",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/HSEQQBDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1436,134 +1520,6 @@
 					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
 					"requestBody": {
 						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.2.31.37.25.27.143.286.290.294.193.377.21.32.33.229.29.18.109.209.20.301.19.5.30</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MarketInfoSQLDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDBLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"tableName": {
-						"type": "String",
-						"defaultValue": "staging.MarketInfo"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "RecordID",
-						"type": "Int32"
-					},
-					{
-						"name": "DateModified",
-						"type": "DateTime"
-					},
-					{
-						"name": "ReportDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "Type",
-						"type": "String"
-					},
-					{
-						"name": "RelatedLoadPort1ID",
-						"type": "String"
-					},
-					{
-						"name": "RelatedDischPort1ID",
-						"type": "String"
-					},
-					{
-						"name": "RelatedChartererID",
-						"type": "String"
-					},
-					{
-						"name": "RelatedLoadPort2ID",
-						"type": "String"
-					},
-					{
-						"name": "RelatedDischPort2ID",
-						"type": "String"
-					},
-					{
-						"name": "DischPort3RelatedID",
-						"type": "String"
-					},
-					{
-						"name": "RelatedVesselID",
-						"type": "String"
-					},
-					{
-						"name": "Publishable_ADMIN",
-						"type": "String"
-					},
-					{
-						"name": "RelatedProductID",
-						"type": "String"
-					},
-					{
-						"name": "Commencement",
-						"type": "String"
-					},
-					{
-						"name": "Cancelling",
-						"type": "String"
-					},
-					{
-						"name": "RelatedCompetitorID",
-						"type": "String"
-					},
-					{
-						"name": "FreightRatePMTEntry",
-						"type": "Decimal"
-					},
-					{
-						"name": "ProductQuantity_ENTRY",
-						"type": "Decimal"
-					},
-					{
-						"name": "Unit",
-						"type": "String"
-					},
-					{
-						"name": "RelatedOwnerLinkID",
-						"type": "String"
-					},
-					{
-						"name": "Internal",
-						"type": "String"
-					},
-					{
-						"name": "BasisDataEntry",
-						"type": "String"
-					},
-					{
-						"name": "PandC",
-						"type": "String"
-					},
-					{
-						"name": "LastModifiedBy",
-						"type": "String"
-					},
-					{
-						"name": "Notes",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": {
-						"value": "@dataset().tableName",
 						"type": "Expression"
 					}
 				}

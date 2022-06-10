@@ -13,6 +13,46 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PortEventTimesSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.PortEventTimes"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "QBRecId",
+						"type": "Int32"
+					},
+					{
+						"name": "EventNameReports",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PortsQBDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -2292,83 +2332,6 @@
 				"typeProperties": {
 					"tableName": {
 						"value": "@dataset().tableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ScrapPricesQBDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "QBHttpLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"QBTableName": {
-						"type": "string",
-						"defaultValue": "bpeitzc6w"
-					},
-					"StartDate_WhereClause": {
-						"type": "string",
-						"defaultValue": "1900-01-01"
-					}
-				},
-				"annotations": [],
-				"type": "HttpFile",
-				"structure": [
-					{
-						"name": "QBRecId",
-						"type": "Int32"
-					},
-					{
-						"name": "AssessmentDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ScrapLocation",
-						"type": "String"
-					},
-					{
-						"name": "USD_LDGAverage",
-						"type": "Decimal"
-					},
-					{
-						"name": "Comment",
-						"type": "String"
-					},
-					{
-						"name": "VesselType",
-						"type": "String"
-					},
-					{
-						"name": "LDTRange",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"relativeUrl": {
-						"value": "@dataset().QBTableName",
-						"type": "Expression"
-					},
-					"requestMethod": "POST",
-					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
-					"requestBody": {
-						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'6'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.7.8.9.10.11</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
 						"type": "Expression"
 					}
 				}

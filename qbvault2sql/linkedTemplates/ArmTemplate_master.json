@@ -1046,24 +1046,6 @@
 					},
 					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad": {
 						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad')]"
-					},
-					"PortsTrigger_properties_PortsPipeLine_parameters_sourceTable": {
-						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_sourceTable')]"
-					},
-					"PortsTrigger_properties_PortsPipeLine_parameters_targetTable": {
-						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_targetTable')]"
-					},
-					"PortsTrigger_properties_PortsPipeLine_parameters_logTable": {
-						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_logTable')]"
-					},
-					"PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc": {
-						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc')]"
-					},
-					"PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc": {
-						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc')]"
-					},
-					"PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad": {
-						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad')]"
 					}
 				}
 			},
@@ -1084,6 +1066,24 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_sourceTable": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_sourceTable')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_targetTable": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_targetTable')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_logTable": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_logTable')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_syncStoredProc')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('PortsTrigger_properties_PortsPipeLine_parameters_IsFullLoad')]"
 					},
 					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable": {
 						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable')]"
