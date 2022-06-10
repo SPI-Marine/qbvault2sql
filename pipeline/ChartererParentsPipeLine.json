@@ -67,8 +67,7 @@
 						"columnMappings": {
 							"Record ID#": "QBRecId",
 							"Charterer Parent Name": "ChartererParentName",
-							"Notes": "Notes",
-							"Type": "Type"
+							"Notes": "Notes"
 						}
 					}
 				},

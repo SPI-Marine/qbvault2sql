@@ -27,12 +27,8 @@
 				"type": "String"
 			},
 			{
-				"name": "Type",
-				"type": "String"
-			},
-			{
 				"name": "Record ID#",
-				"type": "Int32"
+				"type": "String"
 			}
 		],
 		"typeProperties": {
