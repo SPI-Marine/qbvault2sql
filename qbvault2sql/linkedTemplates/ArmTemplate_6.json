@@ -3494,7 +3494,7 @@
 									"Record ID#": "QBRecId",
 									"Port Name": "PortName",
 									"Related Shipping Area ID": "RelatedShippingAreaId",
-									"Country": "Country",
+									"Country (IHS)": "Country",
 									"Comments": "Comments",
 									"Lattitude": "Latitude",
 									"Longitude": "Longitude",
