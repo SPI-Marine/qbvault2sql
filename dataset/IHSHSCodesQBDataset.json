@@ -25,6 +25,26 @@
 			{
 				"name": "HS Code",
 				"type": "String"
+			},
+			{
+				"name": "Group",
+				"type": "String"
+			},
+			{
+				"name": "Vault Products - Name",
+				"type": "String"
+			},
+			{
+				"name": "Related Vault Products",
+				"type": "String"
+			},
+			{
+				"name": "Vault Products - Cargo Type - Type Name",
+				"type": "String"
+			},
+			{
+				"name": "Vault Products - Related Cargo Type",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
@@ -46,7 +66,7 @@
 			"requestMethod": "POST",
 			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
 			"requestBody": {
-				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.15</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.6.15.16.36.21.32.35</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
 				"type": "Expression"
 			}
 		}

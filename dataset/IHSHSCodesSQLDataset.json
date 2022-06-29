@@ -25,6 +25,26 @@
 			{
 				"name": "HSCode",
 				"type": "String"
+			},
+			{
+				"name": "Group",
+				"type": "String"
+			},
+			{
+				"name": "VaultProductsName",
+				"type": "String"
+			},
+			{
+				"name": "RelatedVaultProducts",
+				"type": "String"
+			},
+			{
+				"name": "VaultProductsCargoTypeName",
+				"type": "String"
+			},
+			{
+				"name": "VaultProductsRelatedCargoType",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
