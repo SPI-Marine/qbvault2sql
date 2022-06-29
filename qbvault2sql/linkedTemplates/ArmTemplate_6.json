@@ -49,7 +49,12 @@
 								"columnMappings": {
 									"Record ID#": "QBRecId",
 									"Product Name": "ProductName",
-									"HS Code": "HSCode"
+									"HS Code": "HSCode",
+									"Group": "Group",
+									"Vault Products - Name": "VaultProductsName",
+									"Related Vault Products": "RelatedVaultProducts",
+									"Vault Products - Cargo Type - Type Name": "VaultProductsCargoTypeName",
+									"Vault Products - Related Cargo Type": "VaultProductsRelatedCargoType"
 								}
 							}
 						},
