@@ -1,0 +1,127 @@
+{
+	"name": "USAImportExportPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ACTFetchDeltaData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:30:00"
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000,
+						"preCopyScript": {
+							"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
+							"type": "Expression"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Record ID#": "QBRecId",
+							"Product Name": "ProductName",
+							"HS Code": "HSCode",
+							"Group": "Group",
+							"Vault Products - Name": "VaultProductsName",
+							"Related Vault Products": "RelatedVaultProducts",
+							"Vault Products - Cargo Type - Type Name": "VaultProductsCargoTypeName",
+							"Vault Products - Related Cargo Type": "VaultProductsRelatedCargoType"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "GenericQBDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"QBTableName": {
+								"value": "@pipeline().parameters.sourceTable",
+								"type": "Expression"
+							},
+							"RequestBody": {
+								"value": "@pipeline().parameters.RequestBody",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "IHSHSCodesSQLDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": {
+								"value": "@pipeline().parameters.targetTable",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "ACTSyncDestination",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ACTFetchDeltaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.syncStoredProc",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"sourceTable": {
+				"type": "String",
+				"defaultValue": "bsh9v46pk"
+			},
+			"targetTable": {
+				"type": "String",
+				"defaultValue": "Staging.USAImportExport"
+			},
+			"syncStoredProc": {
+				"type": "String",
+				"defaultValue": "dbo.cp_syncUSAImportExport"
+			},
+			"RequestBody": {
+				"type": "string",
+				"defaultValue": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}</query>    <includeRids>1</includeRids>  <returnpercentage>0</returnpercentage>      <clist>3.6.7.9.12.14.18.23</clist>    <slist>3</slist> <options>csv</options> </qdbapi>"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-02-07T17:05:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
