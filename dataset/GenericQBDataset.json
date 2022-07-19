@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"QBTableName": {
-				"type": "string",
-				"defaultValue": "bmptx8x2q"
+				"type": "string"
 			},
 			"RequestBody": {
 				"type": "string"
