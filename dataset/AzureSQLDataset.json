@@ -24,7 +24,7 @@
 			},
 			{
 				"name": "BLQty",
-				"type": "Int32"
+				"type": "Decimal"
 			},
 			{
 				"name": "RelatedProductID",
