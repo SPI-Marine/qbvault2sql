@@ -15,24 +15,6 @@
 		},
 		"annotations": [],
 		"type": "HttpFile",
-		"structure": [
-			{
-				"name": "<font face=\"verdana",
-				"type": "String"
-			},
-			{
-				"name": "arial",
-				"type": "String"
-			},
-			{
-				"name": "geneva",
-				"type": "String"
-			},
-			{
-				"name": "helvetica\">",
-				"type": "String"
-			}
-		],
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
