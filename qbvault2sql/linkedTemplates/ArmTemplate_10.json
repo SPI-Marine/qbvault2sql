@@ -1,0 +1,103 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "qbvault2sql"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "binf7kupm"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Vessels"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.VesselsLoadInfo"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncVessels"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogVesselsLoadInfo"
+		},
+		"VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselPricesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "VesselPricesPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-06-04T21:16:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "VesselsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-04-02T12:21:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

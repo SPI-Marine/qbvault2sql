@@ -951,7 +951,7 @@
 					},
 					{
 						"name": "DemurrageAmountAgreed",
-						"type": "Decimal"
+						"type": "String"
 					},
 					{
 						"name": "CharterInvoiced",

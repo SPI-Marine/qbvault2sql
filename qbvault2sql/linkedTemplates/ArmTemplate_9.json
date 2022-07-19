@@ -7,6 +7,30 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "qbvault2sql"
 		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bmffryf7t"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.PortEventTimes"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.PortEventTimesLoadInfo"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncPortEventTimes"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogPortEventTimesLoadInfo"
+		},
+		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
 		"PortsTrigger_properties_PortsPipeLine_parameters_sourceTable": {
 			"type": "string",
 			"defaultValue": "biunaupmj"
@@ -270,36 +294,91 @@
 		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
 			"type": "int",
 			"defaultValue": 1
-		},
-		"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
-			"type": "string",
-			"defaultValue": "binf7kupm"
-		},
-		"VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable": {
-			"type": "string",
-			"defaultValue": "staging.Vessels"
-		},
-		"VesselsTrigger_properties_VesselsPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.VesselsLoadInfo"
-		},
-		"VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc": {
-			"type": "string",
-			"defaultValue": "dbo.cp_syncVessels"
-		},
-		"VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogVesselsLoadInfo"
-		},
-		"VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PlantsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PlantsPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-06-04T21:17:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PortEventTimesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PortEventTimesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:13:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PortsTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -967,69 +1046,6 @@
 						"frequency": "Hour",
 						"interval": 1,
 						"startTime": "2019-08-16T20:51:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselPricesTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "VesselPricesPipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 1,
-						"startTime": "2019-06-04T21:16:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselsTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "VesselsPipeLine",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable')]",
-							"targetTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_IsFullLoad')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 1,
-						"startTime": "2019-04-02T12:21:00Z",
 						"timeZone": "UTC"
 					}
 				}

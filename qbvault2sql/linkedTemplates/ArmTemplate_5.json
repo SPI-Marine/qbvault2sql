@@ -639,6 +639,85 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/USImportExportQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string"
+					},
+					"RequestBody": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "BL Date",
+						"type": "String"
+					},
+					{
+						"name": "BL Qty",
+						"type": "String"
+					},
+					{
+						"name": "Related Product ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Owner Parent ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Vessel ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Load Port ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Disch Port ID",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "@dataset().RequestBody",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AdditionalChargeTypePipeLine')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4370,123 +4449,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-10-04T17:22:06Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/IHSCountryPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ACTFetchDeltaData",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "HttpSource",
-								"httpRequestTimeout": "00:30:00"
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000,
-								"preCopyScript": {
-									"value": "TRUNCATE TABLE @{pipeline().parameters.targetTable}",
-									"type": "Expression"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"QBRecId": "QBRecId",
-									"CountryName": "CountryName",
-									"RelatedCommodityRegionID": "RelatedCommodityRegionID"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "IHSCountryQBDataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"QBTableName": "@pipeline().parameters.sourceTable"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "IHSCountrySQLDataset",
-								"type": "DatasetReference",
-								"parameters": {
-									"tableName": {
-										"value": "@pipeline().parameters.targetTable",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "ACTSyncDestination",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "ACTFetchDeltaData",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": {
-								"value": "@pipeline().parameters.syncStoredProc",
-								"type": "Expression"
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDBLinkedService",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"sourceTable": {
-						"type": "String",
-						"defaultValue": "bmptx8x2q"
-					},
-					"targetTable": {
-						"type": "String",
-						"defaultValue": "Staging.IHSCountry"
-					},
-					"syncStoredProc": {
-						"type": "String",
-						"defaultValue": "dbo.cp_syncIHSCountry"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-03-07T18:35:48Z"
 			},
 			"dependsOn": []
 		}

@@ -7,6 +7,30 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "qbvault2sql"
 		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkt3vg9i3"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.ChartererParents"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.ChartererParentsLoadInfo"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncChartererParents"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogChartererParentsLoadInfo"
+		},
+		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
 		"CoatingCategoriesTrigger_properties_CoatingCategoriesPipeLine_parameters_sourceTable": {
 			"type": "string",
 			"defaultValue": "bnnwtpnzv"
@@ -222,36 +246,83 @@
 		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad": {
 			"type": "int",
 			"defaultValue": 1
-		},
-		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable": {
-			"type": "string",
-			"defaultValue": "bmffryf7t"
-		},
-		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable": {
-			"type": "string",
-			"defaultValue": "staging.PortEventTimes"
-		},
-		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.PortEventTimesLoadInfo"
-		},
-		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc": {
-			"type": "string",
-			"defaultValue": "dbo.cp_syncPortEventTimes"
-		},
-		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogPortEventTimesLoadInfo"
-		},
-		"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/BunkerPricesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "BunkerPricesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-06-06T11:47:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ChartererParentsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "ChartererParentsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 12,
+						"startTime": "2019-04-02T12:05:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CoatingCategoriesTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -370,6 +441,13 @@
 					{
 						"pipelineReference": {
 							"referenceName": "COAActionsPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "USAImportExportPipeline",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -897,85 +975,6 @@
 						"interval": 1,
 						"startTime": "2019-04-02T12:13:00Z",
 						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PlantsTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "PlantsPipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-06-04T21:17:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								59
-							],
-							"hours": [
-								23
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PortEventTimesTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "PortEventTimesPipeLine",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceTable": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable')]",
-							"targetTable": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_IsFullLoad')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-04-02T12:13:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								59
-							],
-							"hours": [
-								23
-							]
-						}
 					}
 				}
 			},
