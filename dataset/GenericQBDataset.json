@@ -15,6 +15,40 @@
 		},
 		"annotations": [],
 		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "Record ID#",
+				"type": "String"
+			},
+			{
+				"name": "BL Date",
+				"type": "String"
+			},
+			{
+				"name": "BL Qty",
+				"type": "String"
+			},
+			{
+				"name": "Related Product ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Owner Parent ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Vessel ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Load Port ID",
+				"type": "String"
+			},
+			{
+				"name": "Related Disch Port ID",
+				"type": "String"
+			}
+		],
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
@@ -27,16 +61,8 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": true
 			},
-			"relativeUrl": {
-				"value": "@dataset().QBTableName",
-				"type": "Expression"
-			},
 			"requestMethod": "POST",
-			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
-			"requestBody": {
-				"value": "@dataset().RequestBody",
-				"type": "Expression"
-			}
+			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
