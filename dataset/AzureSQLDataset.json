@@ -15,36 +15,40 @@
 		"type": "AzureSqlTable",
 		"structure": [
 			{
-				"name": "RecordID",
+				"name": "RecordId",
 				"type": "Int32"
 			},
 			{
-				"name": "BLDate",
-				"type": "DateTime"
+				"name": "ActionInitiatedBy",
+				"type": "String"
 			},
 			{
-				"name": "BLQty",
-				"type": "Decimal"
+				"name": "TriggerEvent",
+				"type": "String"
 			},
 			{
-				"name": "RelatedProductID",
+				"name": "DaysToTriggerEvent",
 				"type": "Int32"
 			},
 			{
-				"name": "RelatedOwnerParentID",
+				"name": "Action",
+				"type": "String"
+			},
+			{
+				"name": "COANumber",
+				"type": "String"
+			},
+			{
+				"name": "ActionNumber",
 				"type": "Int32"
 			},
 			{
-				"name": "RelatedVesselID",
-				"type": "Int32"
+				"name": "PriorOrAfter",
+				"type": "String"
 			},
 			{
-				"name": "RelatedLoadPortID",
-				"type": "Int32"
-			},
-			{
-				"name": "RelatedDischPortID",
-				"type": "Int32"
+				"name": "DayType",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
