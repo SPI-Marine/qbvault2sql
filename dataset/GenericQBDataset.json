@@ -22,35 +22,31 @@
 				"type": "String"
 			},
 			{
-				"name": "Action Initiated By",
+				"name": "BL Date",
 				"type": "String"
 			},
 			{
-				"name": "Trigger Event",
+				"name": "BL Qty",
 				"type": "String"
 			},
 			{
-				"name": "Days to Trigger Event",
+				"name": "Related Product ID",
 				"type": "String"
 			},
 			{
-				"name": "Action",
+				"name": "Related Owner Parent ID",
 				"type": "String"
 			},
 			{
-				"name": "COA Number",
+				"name": "Related Vessel ID",
 				"type": "String"
 			},
 			{
-				"name": "Action Number",
+				"name": "Related Load Port ID",
 				"type": "String"
 			},
 			{
-				"name": "Prior or After",
-				"type": "String"
-			},
-			{
-				"name": "Day Type",
+				"name": "Related Disch Port ID",
 				"type": "String"
 			}
 		],
