@@ -63,13 +63,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSQLDataset",
+						"referenceName": "USAImportExportSQLDataset",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableName": {
-								"value": "@pipeline().parameters.targetTable",
-								"type": "Expression"
-							}
+							"tableName": "Staging.USAImportExport"
 						}
 					}
 				]
