@@ -5541,44 +5541,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ACTLookupLastLoaded",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "AzureSqlGenericDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
 						"name": "ACTFetchDeltaData",
 						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "ACTSetLastLoadedDate",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -5620,7 +5585,8 @@
 									"Invoice Type": "InvoiceType",
 									"Related SPI Fixture ID": "RelatedSPIFixtureID",
 									"Invoice Status_ADMIN": "InvoiceStatus_ADMIN",
-									"Owners Due Date": "OwnersDueDate"
+									"Owners Due Date": "OwnersDueDate",
+									"CorrectInvoice": "CorrectInvoice"
 								}
 							}
 						},
@@ -5629,8 +5595,7 @@
 								"referenceName": "OwnerInvoiceQBDataset",
 								"type": "DatasetReference",
 								"parameters": {
-									"QBTableName": "@pipeline().parameters.sourceTable",
-									"StartDate_WhereClause": "@variables('varLastLoadedDate')"
+									"QBTableName": "@pipeline().parameters.sourceTable"
 								}
 							}
 						],
@@ -5673,91 +5638,6 @@
 							"referenceName": "AzureSqlDBLinkedService",
 							"type": "LinkedServiceReference"
 						}
-					},
-					{
-						"name": "ACTSetStartTimeStamp",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ACTLookupLastLoaded",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "startTimeStamp",
-							"value": {
-								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ACTUpdateLog",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "ACTSyncDestination",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "ACTSetStartTimeStamp",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": {
-								"value": "@pipeline().parameters.updateLogStoredProc",
-								"type": "Expression"
-							},
-							"storedProcedureParameters": {
-								"LastProcessed": {
-									"value": {
-										"value": "@variables('startTimeStamp')",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDBLinkedService",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "ACTSetLastLoadedDate",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ACTLookupLastLoaded",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "varLastLoadedDate",
-							"value": {
-								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
-								"type": "Expression"
-							}
-						}
 					}
 				],
 				"policy": {
@@ -5773,38 +5653,15 @@
 						"type": "String",
 						"defaultValue": "staging.OwnerInvoice"
 					},
-					"logTable": {
-						"type": "String",
-						"defaultValue": "etl.OwnerInvoiceLoadInfo"
-					},
 					"syncStoredProc": {
 						"type": "String",
 						"defaultValue": "dbo.cp_syncOwnerInvoice"
-					},
-					"updateLogStoredProc": {
-						"type": "String",
-						"defaultValue": "etl.cp_updateLogOwnerInvoiceLoadInfo"
-					},
-					"IsFullLoad": {
-						"type": "int",
-						"defaultValue": 1
-					}
-				},
-				"variables": {
-					"startTimeStamp": {
-						"type": "String",
-						"defaultValue": "1900-01-01"
-					},
-					"varLastLoadedDate": {
-						"type": "String",
-						"defaultValue": "1900-01-01"
 					}
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-09-02T16:08:31Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlGenericDataset')]",
 				"[concat(variables('factoryId'), '/datasets/OwnerInvoiceQBDataset')]",
 				"[concat(variables('factoryId'), '/datasets/OwnerInvoiceSQLDataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
@@ -17170,10 +17027,6 @@
 					"QBTableName": {
 						"type": "string",
 						"defaultValue": "bn5edbwz6"
-					},
-					"StartDate_WhereClause": {
-						"type": "string",
-						"defaultValue": "1900-01-01"
 					}
 				},
 				"annotations": [],
@@ -17246,6 +17099,10 @@
 					{
 						"name": "Owners Due Date",
 						"type": "String"
+					},
+					{
+						"name": "CorrectInvoice",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
@@ -17267,7 +17124,7 @@
 					"requestMethod": "POST",
 					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
 					"requestBody": {
-						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.2.6.7.8.9.10.11.12.13.14.15.16.17.18.31.33</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}</query>    <includeRids>1</includeRids>    <clist>3.2.6.7.8.9.10.11.12.13.14.15.16.17.18.31.33.47</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
 						"type": "Expression"
 					}
 				}
@@ -17360,6 +17217,10 @@
 					},
 					{
 						"name": "OwnersDueDate",
+						"type": "String"
+					},
+					{
+						"name": "CorrectInvoice",
 						"type": "String"
 					}
 				],
@@ -22460,6 +22321,87 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/USImportExportQBDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QBHttpLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"QBTableName": {
+						"type": "string"
+					},
+					"RequestBody": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "Record ID#",
+						"type": "String"
+					},
+					{
+						"name": "BL Date",
+						"type": "String"
+					},
+					{
+						"name": "BL Qty",
+						"type": "String"
+					},
+					{
+						"name": "Related Product ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Owner Parent ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Vessel ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Load Port ID",
+						"type": "String"
+					},
+					{
+						"name": "Related Disch Port ID",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"relativeUrl": {
+						"value": "@dataset().QBTableName",
+						"type": "Expression"
+					},
+					"requestMethod": "POST",
+					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
+					"requestBody": {
+						"value": "@dataset().RequestBody",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/VesselItineraryQBDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -25072,87 +25014,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/VesselsPipeLine')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/USImportExportQBDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "QBHttpLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"QBTableName": {
-						"type": "string"
-					},
-					"RequestBody": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "HttpFile",
-				"structure": [
-					{
-						"name": "Record ID#",
-						"type": "String"
-					},
-					{
-						"name": "BL Date",
-						"type": "String"
-					},
-					{
-						"name": "BL Qty",
-						"type": "String"
-					},
-					{
-						"name": "Related Product ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Owner Parent ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Vessel ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Load Port ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Disch Port ID",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"relativeUrl": {
-						"value": "@dataset().QBTableName",
-						"type": "Expression"
-					},
-					"requestMethod": "POST",
-					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
-					"requestBody": {
-						"value": "@dataset().RequestBody",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/QBHttpLinkedService')]"
 			]
 		}
 	]

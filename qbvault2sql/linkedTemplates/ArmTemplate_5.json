@@ -13,6 +13,90 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/VesselItinerarySQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.VesselItinerary"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "String"
+					},
+					{
+						"name": "RelatedSPIFixtureID",
+						"type": "String"
+					},
+					{
+						"name": "RelatedParcelPortID",
+						"type": "String"
+					},
+					{
+						"name": "RelatedPortID",
+						"type": "String"
+					},
+					{
+						"name": "ETAStart",
+						"type": "String"
+					},
+					{
+						"name": "ETAEnd",
+						"type": "String"
+					},
+					{
+						"name": "ItineraryPortType",
+						"type": "String"
+					},
+					{
+						"name": "Comments",
+						"type": "String"
+					},
+					{
+						"name": "DateModified",
+						"type": "String"
+					},
+					{
+						"name": "ETAStartOriginal_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "OriginalETACreatedOn_ADMIN",
+						"type": "String"
+					},
+					{
+						"name": "DateETAWasUpdatedByOperator_BETA",
+						"type": "String"
+					},
+					{
+						"name": "VesselPortStatus_Override",
+						"type": "String"
+					},
+					{
+						"name": "VesselPortStatusOfficial",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/VesselPricesQBDataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -632,85 +716,6 @@
 				"typeProperties": {
 					"tableName": {
 						"value": "@dataset().tableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/USImportExportQBDataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "QBHttpLinkedService",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"QBTableName": {
-						"type": "string"
-					},
-					"RequestBody": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "HttpFile",
-				"structure": [
-					{
-						"name": "Record ID#",
-						"type": "String"
-					},
-					{
-						"name": "BL Date",
-						"type": "String"
-					},
-					{
-						"name": "BL Qty",
-						"type": "String"
-					},
-					{
-						"name": "Related Product ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Owner Parent ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Vessel ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Load Port ID",
-						"type": "String"
-					},
-					{
-						"name": "Related Disch Port ID",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"relativeUrl": {
-						"value": "@dataset().QBTableName",
-						"type": "Expression"
-					},
-					"requestMethod": "POST",
-					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
-					"requestBody": {
-						"value": "@dataset().RequestBody",
 						"type": "Expression"
 					}
 				}
