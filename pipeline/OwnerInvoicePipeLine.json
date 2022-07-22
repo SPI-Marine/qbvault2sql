@@ -111,10 +111,6 @@
 				"type": "String",
 				"defaultValue": "staging.OwnerInvoice"
 			},
-			"logTable": {
-				"type": "String",
-				"defaultValue": "etl.OwnerInvoiceLoadInfo"
-			},
 			"syncStoredProc": {
 				"type": "String",
 				"defaultValue": "dbo.cp_syncOwnerInvoice"
