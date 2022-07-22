@@ -706,7 +706,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSQLDataset",
+								"referenceName": "AdditionalChargeTypeSQLDataset",
 								"type": "DatasetReference",
 								"parameters": {
 									"tableName": {
@@ -879,7 +879,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureSqlGenericDataset')]",
 				"[concat(variables('factoryId'), '/datasets/AdditionalChargeTypeQBDataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLDataset')]",
+				"[concat(variables('factoryId'), '/datasets/AdditionalChargeTypeSQLDataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
 			]
 		},
@@ -1780,13 +1780,10 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSQLDataset",
+								"referenceName": "COAActionsSQLDataset",
 								"type": "DatasetReference",
 								"parameters": {
-									"tableName": {
-										"value": "@pipeline().parameters.targetTable",
-										"type": "Expression"
-									}
+									"tableName": "Staging.COAActions"
 								}
 							}
 						]
@@ -1849,7 +1846,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/GenericQBDataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLDataset')]",
+				"[concat(variables('factoryId'), '/datasets/COAActionsSQLDataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
 			]
 		},
@@ -12868,13 +12865,10 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSQLDataset",
+								"referenceName": "USAImportExportSQLDataset",
 								"type": "DatasetReference",
 								"parameters": {
-									"tableName": {
-										"value": "@pipeline().parameters.targetTable",
-										"type": "Expression"
-									}
+									"tableName": "Staging.USAImportExport"
 								}
 							}
 						]
@@ -12937,7 +12931,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/USImportExportQBDataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLDataset')]",
+				"[concat(variables('factoryId'), '/datasets/USAImportExportSQLDataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
 			]
 		},
@@ -13945,32 +13939,12 @@
 						"type": "Int32"
 					},
 					{
-						"name": "BLDate",
-						"type": "DateTime"
+						"name": "ChargeType",
+						"type": "String"
 					},
 					{
-						"name": "BLQty",
-						"type": "Decimal"
-					},
-					{
-						"name": "RelatedProductID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedOwnerParentID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedVesselID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedLoadPortID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedDischPortID",
-						"type": "Int32"
+						"name": "ChargeCategory",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
@@ -24756,6 +24730,176 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/VesselsPipeLine')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargeTypeSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "staging.AdditionalChargeType"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "ChargeType",
+						"type": "String"
+					},
+					{
+						"name": "ChargeCategory",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/COAActionsSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.COAActions"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordId",
+						"type": "Int32"
+					},
+					{
+						"name": "ActionInitiatedBy",
+						"type": "String"
+					},
+					{
+						"name": "TriggerEvent",
+						"type": "String"
+					},
+					{
+						"name": "DaysToTriggerEvent",
+						"type": "Int32"
+					},
+					{
+						"name": "Action",
+						"type": "String"
+					},
+					{
+						"name": "COANumber",
+						"type": "String"
+					},
+					{
+						"name": "ActionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PriorOrAfter",
+						"type": "String"
+					},
+					{
+						"name": "DayType",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/USAImportExportSQLDataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDBLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "String",
+						"defaultValue": "Staging.USAImportExport"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "RecordID",
+						"type": "Int32"
+					},
+					{
+						"name": "BLDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "BLQty",
+						"type": "Decimal"
+					},
+					{
+						"name": "RelatedProductID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedOwnerParentID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedVesselID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedLoadPortID",
+						"type": "Int32"
+					},
+					{
+						"name": "RelatedDischPortID",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
 			]
 		}
 	]

@@ -780,6 +780,26 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_6')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_8",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_8.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable": {
 						"value": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable')]"
@@ -816,26 +836,6 @@
 					},
 					"BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad": {
 						"value": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_6')]"
-			]
-		},
-		{
-			"name": "qbvault2sql_ArmTemplate_8",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_8.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					},
 					"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable": {
 						"value": "[parameters('ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable')]"
@@ -962,6 +962,26 @@
 					},
 					"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_IsFullLoad": {
 						"value": "[parameters('ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_IsFullLoad')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_7')]"
+			]
+		},
+		{
+			"name": "qbvault2sql_ArmTemplate_9",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_9.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable": {
 						"value": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable')]"
@@ -1016,26 +1036,6 @@
 					},
 					"ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad": {
 						"value": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'qbvault2sql_ArmTemplate_7')]"
-			]
-		},
-		{
-			"name": "qbvault2sql_ArmTemplate_9",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_9.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					},
 					"PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable": {
 						"value": "[parameters('PortEventTimesTrigger_properties_PortEventTimesPipeLine_parameters_sourceTable')]"
@@ -1225,24 +1225,6 @@
 					},
 					"TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad": {
 						"value": "[parameters('TankCoatingsTrigger_properties_TankCoatingsPipeLine_parameters_IsFullLoad')]"
-					},
-					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable": {
-						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable')]"
-					},
-					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable": {
-						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable')]"
-					},
-					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable": {
-						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable')]"
-					},
-					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc": {
-						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc')]"
-					},
-					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc": {
-						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc')]"
-					},
-					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
-						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad')]"
 					}
 				}
 			},
@@ -1263,6 +1245,24 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc')]"
+					},
+					"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
+						"value": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad')]"
 					},
 					"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
 						"value": "[parameters('VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable')]"

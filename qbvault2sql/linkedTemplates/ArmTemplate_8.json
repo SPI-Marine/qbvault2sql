@@ -7,6 +7,54 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "qbvault2sql"
 		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bn95a4fez"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.AdditionalChargeType"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.AdditionalChargeTypeLoadInfo"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncAdditionalChargeType"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogAdditionalChargeTypeLoadInfo"
+		},
+		"AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bk2txxzex"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.Berths"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.BerthsLoadInfo"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncBerths"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogBerthsLoadInfo"
+		},
+		"BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
 		"ChartererParentsTrigger_properties_ChartererParentsPipeLine_parameters_sourceTable": {
 			"type": "string",
 			"defaultValue": "bkt3vg9i3"
@@ -174,84 +222,118 @@
 		"ParcelBerthsTrigger_properties_ParcelBerthsPipeLine_parameters_IsFullLoad": {
 			"type": "int",
 			"defaultValue": 1
-		},
-		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable": {
-			"type": "string",
-			"defaultValue": "bmf5abifq"
-		},
-		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_targetTable": {
-			"type": "string",
-			"defaultValue": "staging.ParcelPorts"
-		},
-		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.ParcelPortsLoadInfo"
-		},
-		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_syncStoredProc": {
-			"type": "string",
-			"defaultValue": "dbo.cp_syncParcelPorts"
-		},
-		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogParcelPortsLoadInfo"
-		},
-		"ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
-		},
-		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_sourceTable": {
-			"type": "string",
-			"defaultValue": "bntybms7q"
-		},
-		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_targetTable": {
-			"type": "string",
-			"defaultValue": "staging.ParcelProducts"
-		},
-		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.ParcelProductsLoadInfo"
-		},
-		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_syncStoredProc": {
-			"type": "string",
-			"defaultValue": "dbo.cp_syncParcelProducts"
-		},
-		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogParcelProductsLoadInfo"
-		},
-		"ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
-		},
-		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_sourceTable": {
-			"type": "string",
-			"defaultValue": "bmetvurzg"
-		},
-		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_targetTable": {
-			"type": "string",
-			"defaultValue": "staging.Parcels"
-		},
-		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.ParcelsLoadInfo"
-		},
-		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_syncStoredProc": {
-			"type": "string",
-			"defaultValue": "dbo.cp_syncParcels"
-		},
-		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogParcelsLoadInfo"
-		},
-		"ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargeTypeTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "AdditionalChargeTypePipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('AdditionalChargeTypeTrigger_properties_AdditionalChargeTypePipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 6,
+						"startTime": "2019-04-02T12:01:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AdditionalChargesTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "AdditionalChargesPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-06-06T11:34:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BerthsTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "BerthsPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('BerthsTrigger_properties_BerthsPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T11:56:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BunkerPricesTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
@@ -869,111 +951,6 @@
 						"frequency": "Hour",
 						"interval": 1,
 						"startTime": "2019-10-02T16:50:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ParcelPortsTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "ParcelPortsPipeLine",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceTable": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_sourceTable')]",
-							"targetTable": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('ParcelPortsTrigger_properties_ParcelPortsPipeLine_parameters_IsFullLoad')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 1,
-						"startTime": "2019-04-02T12:13:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ParcelProductsTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "ParcelProductsPipeLine",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceTable": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_sourceTable')]",
-							"targetTable": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('ParcelProductsTrigger_properties_ParcelProductsPipeLine_parameters_IsFullLoad')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 1,
-						"startTime": "2019-04-02T12:13:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ParcelsTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "ParcelsPipeLine",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"sourceTable": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_sourceTable')]",
-							"targetTable": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('ParcelsTrigger_properties_ParcelsPipeLine_parameters_IsFullLoad')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 1,
-						"startTime": "2019-04-02T12:13:00Z",
 						"timeZone": "UTC"
 					}
 				}

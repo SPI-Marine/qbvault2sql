@@ -7,6 +7,30 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "qbvault2sql"
 		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable": {
+			"type": "string",
+			"defaultValue": "bkwzcz4nd"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable": {
+			"type": "string",
+			"defaultValue": "staging.TeamMembers"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable": {
+			"type": "string",
+			"defaultValue": "etl.TeamMembersLoadInfo"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc": {
+			"type": "string",
+			"defaultValue": "dbo.cp_syncTeamMembers"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc": {
+			"type": "string",
+			"defaultValue": "etl.cp_updateLogTeamMembersLoadInfo"
+		},
+		"TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad": {
+			"type": "int",
+			"defaultValue": 1
+		},
 		"VesselsTrigger_properties_VesselsPipeLine_parameters_sourceTable": {
 			"type": "string",
 			"defaultValue": "binf7kupm"
@@ -36,6 +60,106 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/TeamMembersTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "TeamMembersPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"sourceTable": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_sourceTable')]",
+							"targetTable": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_targetTable')]",
+							"logTable": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_logTable')]",
+							"syncStoredProc": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_syncStoredProc')]",
+							"updateLogStoredProc": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_updateLogStoredProc')]",
+							"IsFullLoad": "[parameters('TeamMembersTrigger_properties_TeamMembersPipeLine_parameters_IsFullLoad')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-02T12:20:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								59
+							],
+							"hours": [
+								23
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TimeChartererTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "TimeChartererPipeLine",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 6,
+						"startTime": "2020-08-20T15:21:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselItineraryTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Daily trigger to load VesselItinerary table from QB",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "VesselItineraryPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2019-08-16T20:51:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/VesselPricesTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",

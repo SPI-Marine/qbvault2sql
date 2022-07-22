@@ -338,32 +338,12 @@
 						"type": "Int32"
 					},
 					{
-						"name": "BLDate",
-						"type": "DateTime"
+						"name": "ChargeType",
+						"type": "String"
 					},
 					{
-						"name": "BLQty",
-						"type": "Decimal"
-					},
-					{
-						"name": "RelatedProductID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedOwnerParentID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedVesselID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedLoadPortID",
-						"type": "Int32"
-					},
-					{
-						"name": "RelatedDischPortID",
-						"type": "Int32"
+						"name": "ChargeCategory",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
