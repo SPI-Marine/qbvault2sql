@@ -81,6 +81,10 @@
 			{
 				"name": "OwnersDueDate",
 				"type": "String"
+			},
+			{
+				"name": "CorrectInvoice",
+				"type": "String"
 			}
 		],
 		"typeProperties": {

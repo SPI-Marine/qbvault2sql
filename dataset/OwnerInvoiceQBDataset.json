@@ -9,10 +9,6 @@
 			"QBTableName": {
 				"type": "string",
 				"defaultValue": "bn5edbwz6"
-			},
-			"StartDate_WhereClause": {
-				"type": "string",
-				"defaultValue": "1900-01-01"
 			}
 		},
 		"annotations": [],
@@ -85,6 +81,10 @@
 			{
 				"name": "Owners Due Date",
 				"type": "String"
+			},
+			{
+				"name": "CorrectInvoice",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
@@ -106,7 +106,7 @@
 			"requestMethod": "POST",
 			"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
 			"requestBody": {
-				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>    <includeRids>1</includeRids>    <clist>3.2.6.7.8.9.10.11.12.13.14.15.16.17.18.31.33</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
+				"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>    <query>{'3'.XEX.0}</query>    <includeRids>1</includeRids>    <clist>3.2.6.7.8.9.10.11.12.13.14.15.16.17.18.31.33.47</clist>    <slist>3</slist>    <options>csv</options> </qdbapi>",
 				"type": "Expression"
 			}
 		}
