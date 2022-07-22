@@ -353,6 +353,14 @@
 			{
 				"name": "PortTimeRate_ENTRY",
 				"type": "String"
+			},
+			{
+				"name": "VesselSubstitutionReason",
+				"type": "String"
+			},
+			{
+				"name": "VesselSubstituted",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
