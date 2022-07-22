@@ -1,0 +1,38 @@
+{
+	"name": "AdditionalChargeTypeSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "staging.AdditionalChargeType"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "ChargeType",
+				"type": "String"
+			},
+			{
+				"name": "ChargeCategory",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
