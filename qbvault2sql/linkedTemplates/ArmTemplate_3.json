@@ -475,10 +475,6 @@
 					"QBTableName": {
 						"type": "string",
 						"defaultValue": "bmd6t28k5"
-					},
-					"StartDate_WhereClause": {
-						"type": "string",
-						"defaultValue": "1900-01-01"
 					}
 				},
 				"annotations": [],
@@ -827,6 +823,14 @@
 					{
 						"name": "Port Time Rate_ENTRY",
 						"type": "String"
+					},
+					{
+						"name": "Vessel Substitution Reason",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Substituted",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
@@ -848,7 +852,7 @@
 					"requestMethod": "POST",
 					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
 					"requestBody": {
-						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.302.1308.901.25.511.1035.1341.8.13.41.42.43.44.45.47.179.381.391.470.497.498.522.523.613.614.691.690.785.786.792.793.818.956.955.1016.1140.1262.1261.1260.1312.39.502.504.795.865.524.1.2.434.435.439.440.449.450.451.452.453.454.40.952.1269.541.1647.1619.1055.1056.1318.1160.1159.721.7.48.1868.1900.1901.1766.941.1888.1907.1908.928.1807.1559.1927.1552</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.302.1308.901.25.511.1035.1341.8.13.41.42.43.44.45.47.179.381.391.470.497.498.522.523.613.614.691.690.785.786.792.793.818.956.955.1016.1140.1262.1261.1260.1312.39.502.504.795.865.524.1.2.434.435.439.440.449.450.451.452.453.454.40.952.1269.541.1647.1619.1055.1056.1318.1160.1159.721.7.48.1868.1900.1901.1766.941.1888.1907.1908.928.1807.1559.1927.1552.1957.1958</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
 						"type": "Expression"
 					}
 				}
@@ -1211,6 +1215,14 @@
 					},
 					{
 						"name": "PortTimeRate_ENTRY",
+						"type": "String"
+					},
+					{
+						"name": "VesselSubstitutionReason",
+						"type": "String"
+					},
+					{
+						"name": "VesselSubstituted",
 						"type": "String"
 					}
 				],

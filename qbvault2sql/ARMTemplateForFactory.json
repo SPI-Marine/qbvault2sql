@@ -363,21 +363,9 @@
 			"type": "string",
 			"defaultValue": "staging.PostFixtures"
 		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.PostFixturesLoadInfo"
-		},
 		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
 			"type": "string",
 			"defaultValue": "dbo.cp_syncPostFixtures"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
 		},
 		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
 			"type": "string",
@@ -8451,44 +8439,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ACTLookupLastLoaded",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "SELECT TOP 1 convert(varchar, LastLoaded, 120) LastLoaded , convert(varchar, GETDATE(), 120) StartDateTime FROM @{pipeline().parameters.logTable} ORDER BY CreateDate DESC",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "AzureSqlGenericDataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
 						"name": "ACTFetchDeltaData",
 						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "ACTSetLastLoadedDate",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -8598,7 +8551,9 @@
 									"Voyage Summary Report Comments_ADMIN": "VoyageSummaryReportComments_ADMIN",
 									"Extra Laytime for Fixture_Entry_ADMIN": "ExtraLaytimeforFixture_Entry_ADMIN",
 									"Related SPI COA Trade Lane ID": "RelatedSPICOATradeLaneID",
-									"Port Time Rate_ENTRY": "PortTimeRate_ENTRY"
+									"Port Time Rate_ENTRY": "PortTimeRate_ENTRY",
+									"Vessel Substitution Reason": "VesselSubstitutionReason",
+									"Vessel Substituted": "VesselSubstituted"
 								}
 							}
 						},
@@ -8609,10 +8564,6 @@
 								"parameters": {
 									"QBTableName": {
 										"value": "@pipeline().parameters.sourceTable",
-										"type": "Expression"
-									},
-									"StartDate_WhereClause": {
-										"value": "@variables('varLastLoadedDate')",
 										"type": "Expression"
 									}
 								}
@@ -8657,91 +8608,6 @@
 							"referenceName": "AzureSqlDBLinkedService",
 							"type": "LinkedServiceReference"
 						}
-					},
-					{
-						"name": "ACTSetStartTimeStamp",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ACTLookupLastLoaded",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "startTimeStamp",
-							"value": {
-								"value": "@{activity('ACTLookupLastLoaded').output.firstRow.StartDateTime}",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ACTUpdateLog",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "ACTSyncDestination",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "ACTSetStartTimeStamp",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": {
-								"value": "@pipeline().parameters.updateLogStoredProc",
-								"type": "Expression"
-							},
-							"storedProcedureParameters": {
-								"LastProcessed": {
-									"value": {
-										"value": "@variables('startTimeStamp')",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDBLinkedService",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "ACTSetLastLoadedDate",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ACTLookupLastLoaded",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "varLastLoadedDate",
-							"value": {
-								"value": "@if(equals(pipeline().parameters.IsFullLoad, 0), activity('ACTLookupLastLoaded').output.firstRow.LastLoaded, '1900-01-01')",
-								"type": "Expression"
-							}
-						}
 					}
 				],
 				"policy": {
@@ -8757,21 +8623,9 @@
 						"type": "String",
 						"defaultValue": "staging.PostFixtures"
 					},
-					"logTable": {
-						"type": "String",
-						"defaultValue": "etl.PostFixturesLoadInfo"
-					},
 					"syncStoredProc": {
 						"type": "String",
 						"defaultValue": "dbo.cp_syncPostFixtures"
-					},
-					"updateLogStoredProc": {
-						"type": "String",
-						"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
-					},
-					"IsFullLoad": {
-						"type": "int",
-						"defaultValue": 1
 					}
 				},
 				"variables": {
@@ -8788,7 +8642,6 @@
 				"lastPublishTime": "2021-08-13T10:15:45Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AzureSqlGenericDataset')]",
 				"[concat(variables('factoryId'), '/datasets/PostFixturesQBDataset')]",
 				"[concat(variables('factoryId'), '/datasets/PostFixturesSQLDataset')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDBLinkedService')]"
@@ -19066,10 +18919,6 @@
 					"QBTableName": {
 						"type": "string",
 						"defaultValue": "bmd6t28k5"
-					},
-					"StartDate_WhereClause": {
-						"type": "string",
-						"defaultValue": "1900-01-01"
 					}
 				},
 				"annotations": [],
@@ -19418,6 +19267,14 @@
 					{
 						"name": "Port Time Rate_ENTRY",
 						"type": "String"
+					},
+					{
+						"name": "Vessel Substitution Reason",
+						"type": "String"
+					},
+					{
+						"name": "Vessel Substituted",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
@@ -19439,7 +19296,7 @@
 					"requestMethod": "POST",
 					"additionalHeaders": "QUICKBASE-ACTION: API_GenResultsTable\nContent-Type: application/xml",
 					"requestBody": {
-						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}AND{'2'.GTE.@{dataset().StartDate_WhereClause}}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.302.1308.901.25.511.1035.1341.8.13.41.42.43.44.45.47.179.381.391.470.497.498.522.523.613.614.691.690.785.786.792.793.818.956.955.1016.1140.1262.1261.1260.1312.39.502.504.795.865.524.1.2.434.435.439.440.449.450.451.452.453.454.40.952.1269.541.1647.1619.1055.1056.1318.1160.1159.721.7.48.1868.1900.1901.1766.941.1888.1907.1908.928.1807.1559.1927.1552</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
+						"value": "<qdbapi>  <usertoken>bz5umi_dstu_bz5w2f6c2wtfp2cjh5ebwnbce6z</usertoken>\n<query>{'3'.XEX.0}</query>\n<includeRids>1</includeRids> \n<returnpercentage>0</returnpercentage>      \n<clist>3.302.1308.901.25.511.1035.1341.8.13.41.42.43.44.45.47.179.381.391.470.497.498.522.523.613.614.691.690.785.786.792.793.818.956.955.1016.1140.1262.1261.1260.1312.39.502.504.795.865.524.1.2.434.435.439.440.449.450.451.452.453.454.40.952.1269.541.1647.1619.1055.1056.1318.1160.1159.721.7.48.1868.1900.1901.1766.941.1888.1907.1908.928.1807.1559.1927.1552.1957.1958</clist>    \n<slist>3</slist> \n<options>csv</options> \n</qdbapi>",
 						"type": "Expression"
 					}
 				}
@@ -19804,6 +19661,14 @@
 					},
 					{
 						"name": "PortTimeRate_ENTRY",
+						"type": "String"
+					},
+					{
+						"name": "VesselSubstitutionReason",
+						"type": "String"
+					},
+					{
+						"name": "VesselSubstituted",
 						"type": "String"
 					}
 				],
@@ -24331,10 +24196,7 @@
 						"parameters": {
 							"sourceTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable')]",
 							"targetTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad')]"
+							"syncStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]"
 						}
 					}
 				],

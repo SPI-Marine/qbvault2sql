@@ -363,21 +363,9 @@
 			"type": "string",
 			"defaultValue": "staging.PostFixtures"
 		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.PostFixturesLoadInfo"
-		},
 		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
 			"type": "string",
 			"defaultValue": "dbo.cp_syncPostFixtures"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
 		},
 		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
 			"type": "string",
@@ -1091,17 +1079,8 @@
 					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable": {
 						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable')]"
 					},
-					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
-						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable')]"
-					},
 					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
 						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]"
-					},
-					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
-						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc')]"
-					},
-					"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
-						"value": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad')]"
 					},
 					"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
 						"value": "[parameters('ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable')]"

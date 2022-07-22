@@ -272,17 +272,8 @@
 		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable": {
 			"value": "staging.PostFixtures"
 		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
-			"value": "etl.PostFixturesLoadInfo"
-		},
 		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
 			"value": "dbo.cp_syncPostFixtures"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
-			"value": "etl.cp_updateLogPostFixturesLoadInfo"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
-			"value": 1
 		},
 		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
 			"value": "bnqjqzj72"

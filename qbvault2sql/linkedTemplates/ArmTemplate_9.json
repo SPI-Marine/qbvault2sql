@@ -63,21 +63,9 @@
 			"type": "string",
 			"defaultValue": "staging.PostFixtures"
 		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable": {
-			"type": "string",
-			"defaultValue": "etl.PostFixturesLoadInfo"
-		},
 		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc": {
 			"type": "string",
 			"defaultValue": "dbo.cp_syncPostFixtures"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc": {
-			"type": "string",
-			"defaultValue": "etl.cp_updateLogPostFixturesLoadInfo"
-		},
-		"PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad": {
-			"type": "int",
-			"defaultValue": 1
 		},
 		"ProductTypeTrigger_properties_ProductTypePipeLine_parameters_sourceTable": {
 			"type": "string",
@@ -466,10 +454,7 @@
 						"parameters": {
 							"sourceTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_sourceTable')]",
 							"targetTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_targetTable')]",
-							"logTable": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_logTable')]",
-							"syncStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]",
-							"updateLogStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_updateLogStoredProc')]",
-							"IsFullLoad": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_IsFullLoad')]"
+							"syncStoredProc": "[parameters('PostFixturesTrigger_properties_PostFixturesPipeLine_parameters_syncStoredProc')]"
 						}
 					}
 				],
