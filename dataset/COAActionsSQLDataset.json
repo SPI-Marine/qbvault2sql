@@ -1,0 +1,62 @@
+{
+	"name": "COAActionsSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.COAActions"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordId",
+				"type": "Int32"
+			},
+			{
+				"name": "ActionInitiatedBy",
+				"type": "String"
+			},
+			{
+				"name": "TriggerEvent",
+				"type": "String"
+			},
+			{
+				"name": "DaysToTriggerEvent",
+				"type": "Int32"
+			},
+			{
+				"name": "Action",
+				"type": "String"
+			},
+			{
+				"name": "COANumber",
+				"type": "String"
+			},
+			{
+				"name": "ActionNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "PriorOrAfter",
+				"type": "String"
+			},
+			{
+				"name": "DayType",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

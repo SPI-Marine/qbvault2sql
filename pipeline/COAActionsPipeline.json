@@ -64,13 +64,10 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSQLDataset",
+						"referenceName": "COAActionsSQLDataset",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableName": {
-								"value": "@pipeline().parameters.targetTable",
-								"type": "Expression"
-							}
+							"tableName": "Staging.COAActions"
 						}
 					}
 				]
