@@ -1,0 +1,58 @@
+{
+	"name": "USAImportExportSQLDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDBLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "String",
+				"defaultValue": "Staging.USAImportExport"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "RecordID",
+				"type": "Int32"
+			},
+			{
+				"name": "BLDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "BLQty",
+				"type": "Decimal"
+			},
+			{
+				"name": "RelatedProductID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedOwnerParentID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedVesselID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedLoadPortID",
+				"type": "Int32"
+			},
+			{
+				"name": "RelatedDischPortID",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
