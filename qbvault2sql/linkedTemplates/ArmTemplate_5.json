@@ -32,19 +32,19 @@
 				"structure": [
 					{
 						"name": "RecordID",
-						"type": "String"
+						"type": "Int32"
 					},
 					{
 						"name": "RelatedSPIFixtureID",
-						"type": "String"
+						"type": "Int32"
 					},
 					{
 						"name": "RelatedParcelPortID",
-						"type": "String"
+						"type": "Int32"
 					},
 					{
 						"name": "RelatedPortID",
-						"type": "String"
+						"type": "Int32"
 					},
 					{
 						"name": "ETAStart",
@@ -64,19 +64,19 @@
 					},
 					{
 						"name": "DateModified",
-						"type": "String"
+						"type": "DateTime"
 					},
 					{
 						"name": "ETAStartOriginal_ADMIN",
-						"type": "String"
+						"type": "Date"
 					},
 					{
 						"name": "OriginalETACreatedOn_ADMIN",
-						"type": "String"
+						"type": "Date"
 					},
 					{
 						"name": "DateETAWasUpdatedByOperator_BETA",
-						"type": "String"
+						"type": "Date"
 					},
 					{
 						"name": "VesselPortStatus_Override",
@@ -84,6 +84,14 @@
 					},
 					{
 						"name": "VesselPortStatusOfficial",
+						"type": "String"
+					},
+					{
+						"name": "Type_LDP",
+						"type": "String"
+					},
+					{
+						"name": "ReasonForDelay",
 						"type": "String"
 					}
 				],
